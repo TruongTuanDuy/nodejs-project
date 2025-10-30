@@ -9,6 +9,7 @@ const itemSchema = new Schema({
     status: {
         type: String,
         default: "inactive",
+        enum: ["active", "inactive"]
     }
 }, {
     timestamps: true,
