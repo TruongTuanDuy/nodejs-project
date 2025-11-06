@@ -1,4 +1,5 @@
 var { ErrorCustom, BadRequestError, AuthentificationError } = require('../app/core/error_custom');
+const { checkMogooseObjectId } = require('../helpers/check');
 let { readJsonFile, writeFile } = require('../helpers/helper_json_file');
 let ItemService = require('../services/item_service');
 
@@ -20,7 +21,7 @@ class ItemController {
         // const data = await readJsonFile();
         // let result = data.find((e) => e.id == id);
         let id = req.params.id;
-        if (!mongoose.Types.ObjectId.isValid(id))
+        if (!checkMogooseObjectId(id))
             throw new BadRequestError('không tìm thấy id');
         const data = await ItemService.getOne(id);
         if (!data) throw new Error('không tìm thấy id');

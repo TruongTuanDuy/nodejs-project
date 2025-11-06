@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var { asyncHandler } = require('../helpers/async_handle');
+var { asyncHandler } = require('../helpers/async_handler');
 
 const ItemController = require('../controllers/item_controller');
 

@@ -1,4 +1,3 @@
-
 class ErrorCustom extends Error {
     constructor(message, status) {
         super(message)
@@ -17,6 +16,5 @@ class AuthentificationError extends ErrorCustom {
         super(message, status)
     }
 }
-
 
 module.exports = { ErrorCustom, BadRequestError, AuthentificationError }
