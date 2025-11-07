@@ -18,6 +18,10 @@ const categorySchema = new Schema({
         type: String,
         default: null,
     },
+    images: {
+        type: Array,
+        default: [],
+    },
     status: {
         type: String,
         default: "inactive",

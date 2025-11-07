@@ -3,7 +3,7 @@ const { checkMogooseObjectId } = require('../helpers/check');
 let { readJsonFile, writeFile } = require('../helpers/helper_json_file');
 let CategoryService = require('../services/category_service');
 const cloudinary = require('../app/init_cloudinary');
-let { deleteImg } = require('../helpers/deleteImg');
+let { deleteImg, deleteMultiImg } = require('../helpers/deleteImg');
 
 class CategoryController {
 
@@ -84,6 +84,63 @@ class CategoryController {
 
         res.send({
             message: "edit category"
+        });
+    }
+
+    uploadMultiImgCategory = async function (req, res, next) {
+        // console.log(123);
+        // console.log(req.files);
+        // console.log(req.body);
+
+        let id = req.params.id;
+        let obj = req.body;
+        let array = req.files;
+        let url = [];
+
+        if (!checkMogooseObjectId(id)) {
+            deleteMultiImg(array);
+            throw new BadRequestError('không tìm thấy id');
+        }
+
+        const data = await CategoryService.getOne(id);
+
+        if (!data) {
+            deleteMultiImg(array);
+            throw new Error('id không tìm thấy');
+        };
+
+        for (let index = 0; index < array.length; index++) {
+
+            let path = array[index].path;
+            console.log(index);
+
+            try {
+                let result = await cloudinary.uploader
+                    .upload(path, { folder: 'categories' });
+                url.push(result.url);
+                // console.log(path);
+
+                deleteImg(path);
+            } catch (error) {
+                deleteImg(path);
+                throw new ErrorCustom('Lỗi tải ảnh lên Cloudinary', 500, err);
+            }
+            // .then(result => console.log(result));
+            // .then(result => {
+            //     obj.thumb = result.url;
+            //     CategoryService.edit(id, obj);
+            // }).catch(err => {
+            //     throw new ErrorCustom('Lỗi tải ảnh lên Cloudinary', 500, err);
+            // })
+            // .finally(() => {
+            //     deleteImg(path);
+            // })
+
+        }
+        CategoryService.edit(id, { images: url });
+
+        res.send({
+            message: "upload image category"
         });
     }
 

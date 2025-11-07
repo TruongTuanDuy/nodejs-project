@@ -19,4 +19,6 @@ router.put('/:id', asyncHandler(CategoryController.editCategory));
 
 router.put('/uploadImg/:id', upload.single('image'), asyncHandler(CategoryController.uploadImgCategory));
 
+router.put('/uploadMultiImg/:id', upload.array('images', 10), asyncHandler(CategoryController.uploadMultiImgCategory));
+
 module.exports = router;
