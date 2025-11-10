@@ -11,6 +11,8 @@ router.get('/', asyncHandler(CategoryController.getAllCategory));
 
 router.get('/:id', asyncHandler(CategoryController.getOneCategory));
 
+router.get('/:id/product', asyncHandler(CategoryController.getProductByCategory));
+
 router.post('/', asyncHandler(CategoryController.addCategory));
 
 router.delete('/:id', asyncHandler(CategoryController.deleteCategory));

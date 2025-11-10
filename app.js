@@ -27,13 +27,13 @@ app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   if (err instanceof mongoose.Error.ValidationError) {
     console.error('Mongoose Validation Error:', err.message);
-    var error = {};
+    var errorObj = {};
     // You can access individual validation errors in err.errors
     for (let field in err.errors) {
       console.error(`Field '${field}': ${err.errors[field].message}`);
-      error[field] = err.errors[field].message;
+      errorObj[field] = err.errors[field].message;
     }
-    res.status(400).send(error);
+    res.status(400).send(errorObj);
     return
   }
   // render the error page

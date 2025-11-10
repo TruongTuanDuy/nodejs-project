@@ -7,7 +7,7 @@ class ItemService {
     };
 
     getAll = async (query) => {
-        const { sortField = 'createdAt', sortDir = 'asc', findField = 'name', findValue, status, page, limit } = query
+        const { sortField = 'createdAt', sortDir = 'asc', findField = 'name', findValue, status, page, limit } = query;
         let findObj = {};
         let sortObj = {};
         const skip = (page - 1) * limit;

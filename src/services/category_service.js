@@ -1,4 +1,5 @@
 const CategoryModel = require('../models/category_model');
+const ProductModel = require('../models/product_model');
 
 class CategoryService {
 
@@ -44,6 +45,11 @@ class CategoryService {
         // }
 
         let data = await CategoryModel.findById(id)
+        return data
+    };
+
+    getProduct = async (id) => {
+        let data = await ProductModel.find({ category: id })
         return data
     };
 

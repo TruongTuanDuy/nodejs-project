@@ -1,23 +1,33 @@
 var { ErrorCustom, BadRequestError, AuthentificationError } = require('../app/core/error_custom');
 const { checkMogooseObjectId } = require('../helpers/check');
 let { readJsonFile, writeFile } = require('../helpers/helper_json_file');
-let CategoryService = require('../services/category_service');
+let ProductService = require('../services/product_service');
 const cloudinary = require('../app/init_cloudinary');
 let { deleteImg, deleteMultiImg } = require('../helpers/deleteImg');
 
-class CategoryController {
+class ProductController {
 
-    getAllCategory = async function (req, res, next) {
+    getAllProduct = async function (req, res, next) {
         // const data = await readJsonFile();
         console.log(req.query);
-        const data = await CategoryService.getAll(req.query);
+        const data = await ProductService.getAll(req.query);
         res.send({
-            message: "get all category",
+            message: "get all product",
             data
         });
     };
 
-    getOneCategory = async function (req, res, next) {
+    searchProduct = async function (req, res, next) {
+        // const data = await readJsonFile();
+        console.log(req.query);
+        const data = await ProductService.searchProduct(req.query);
+        res.send({
+            message: "search product",
+            data
+        });
+    };
+
+    getOneProduct = async function (req, res, next) {
         console.log(req.params);
         // let id = req.params.id;
         // const data = await readJsonFile();
@@ -25,28 +35,15 @@ class CategoryController {
         let id = req.params.id;
         if (!checkMogooseObjectId(id))
             throw new BadRequestError('không tìm thấy id');
-        const data = await CategoryService.getOne(id);
+        const data = await ProductService.getOne(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
-            message: "get one category",
+            message: "get one product",
             data
         });
     };
 
-    getProductByCategory = async function (req, res, next) {
-        console.log(req.params);
-        let id = req.params.id;
-        if (!checkMogooseObjectId(id))
-            throw new BadRequestError('không tìm thấy id');
-        const data = await CategoryService.getProduct(id);
-        if (!data) throw new Error('không tìm thấy id');
-        res.send({
-            message: "get product by category",
-            data
-        });
-    };
-
-    addCategory = async function (req, res, next) {
+    addProduct = async function (req, res, next) {
         console.log(req.body);
         // const data = await readJsonFile();
         // data.push({
@@ -55,13 +52,13 @@ class CategoryController {
         // });
         // writeFile(data);
 
-        await CategoryService.add(req.body);
+        await ProductService.add(req.body);
         res.send({
-            message: "add category",
+            message: "add product",
         });
     }
 
-    deleteCategory = async function (req, res, next) {
+    deleteProduct = async function (req, res, next) {
         console.log(req.params);
         // let id = req.params.id;
         // let data = await readJsonFile();
@@ -69,38 +66,38 @@ class CategoryController {
         // writeFile(data);
 
         let id = req.params.id;
-        const data = await CategoryService.getOne(id);
+        const data = await ProductService.getOne(id);
         if (!data) throw new BadRequestError('id không tìm thấy');
-        await CategoryService.delete(id);
+        await ProductService.delete(id);
         res.send({
-            message: "delete category"
+            message: "delete product"
         });
     }
 
-    editCategory = async function (req, res, next) {
+    editProduct = async function (req, res, next) {
         console.log(req.params);
         console.log(req.body);
         // let id = req.params.id;
         // let data = await readJsonFile();
-        // let categoryIndex = data.findIndex((e) => e.id == id);
-        // if (categoryIndex !== -1) {
-        //     data[categoryIndex].name = name;
+        // let productIndex = data.findIndex((e) => e.id == id);
+        // if (productIndex !== -1) {
+        //     data[productIndex].name = name;
         // }
         // writeFile(data);
 
         let id = req.params.id;
         let obj = req.body;
-        const data = await CategoryService.getOne(id);
+        const data = await ProductService.getOne(id);
         if (!data) throw new Error('id không tìm thấy');
 
-        await CategoryService.edit(id, obj);
+        await ProductService.edit(id, obj);
 
         res.send({
-            message: "edit category"
+            message: "edit product"
         });
     }
 
-    uploadMultiImgCategory = async function (req, res, next) {
+    uploadMultiImgProduct = async function (req, res, next) {
         // console.log(123);
         // console.log(req.files);
         // console.log(req.body);
@@ -115,7 +112,7 @@ class CategoryController {
             throw new BadRequestError('không tìm thấy id');
         }
 
-        const data = await CategoryService.getOne(id);
+        const data = await ProductService.getOne(id);
 
         if (!data) {
             deleteMultiImg(array);
@@ -141,7 +138,7 @@ class CategoryController {
             // .then(result => console.log(result));
             // .then(result => {
             //     obj.thumb = result.url;
-            //     CategoryService.edit(id, obj);
+            //     ProductService.edit(id, obj);
             // }).catch(err => {
             //     throw new ErrorCustom('Lỗi tải ảnh lên Cloudinary', 500, err);
             // })
@@ -150,14 +147,14 @@ class CategoryController {
             // })
 
         }
-        CategoryService.edit(id, { images: url });
+        ProductService.edit(id, { images: url });
 
         res.send({
-            message: "upload image category"
+            message: "upload image product"
         });
     }
 
-    uploadImgCategory = async function (req, res, next) {
+    uploadImgProduct = async function (req, res, next) {
         console.log(req.file);
         // console.log(req.body);
 
@@ -170,7 +167,7 @@ class CategoryController {
             throw new BadRequestError('không tìm thấy id');
         }
 
-        const data = await CategoryService.getOne(id);
+        const data = await ProductService.getOne(id);
 
         if (!data) {
             deleteImg(path);
@@ -182,7 +179,7 @@ class CategoryController {
             // .then(result => console.log(result));
             .then(result => {
                 obj.thumb = result.url;
-                CategoryService.edit(id, obj);
+                ProductService.edit(id, obj);
                 deleteImg(path);
 
             }).catch(err => {
@@ -191,10 +188,10 @@ class CategoryController {
             })
 
         res.send({
-            message: "upload image category"
+            message: "upload image product"
         });
     }
 
 }
 
-module.exports = new CategoryController()
+module.exports = new ProductController()
