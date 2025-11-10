@@ -1,3 +1,4 @@
+const handlerFindObj = require('../helpers/find_obj');
 const ProductModel = require('../models/product_model');
 
 class ProductService {
@@ -7,22 +8,7 @@ class ProductService {
     };
 
     getAll = async (query) => {
-        const { sortField = 'createdAt', sortDir = "asc", findField = 'name', findValue, status, page, limit } = query
-        let findObj = {};
-        let sortObj = {};
-        const skip = (page - 1) * limit;
-        if (status == 'active' || status == 'inactive') {
-            findObj = {
-                ...findObj,
-                status
-            }
-        };
-        if (findField) {
-            findObj[findField] = new RegExp(findValue, 'i');
-        };
-        if (sortField) {
-            sortObj[sortField] = sortDir;
-        };
+        const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
 
         let count = await ProductModel.find(findObj).countDocuments();
         let data = await ProductModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
@@ -34,7 +20,7 @@ class ProductService {
         };
     };
 
-    //HỎI RÕ THÊM YÊU CẦU
+    //BỎ CÁC CHỨC NĂNG TRONG getAll???
     searchProduct = async (query) => {
         const { sortField = 'createdAt', sortDir = "asc", findField = 'name', findValue, status, page, limit } = query
         let findObj = {};

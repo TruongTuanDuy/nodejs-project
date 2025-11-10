@@ -1,3 +1,4 @@
+const handlerFindObj = require('../helpers/find_obj');
 const CategoryModel = require('../models/category_model');
 const ProductModel = require('../models/product_model');
 
@@ -8,22 +9,7 @@ class CategoryService {
     };
 
     getAll = async (query) => {
-        const { sortField = 'createdAt', sortDir = "asc", findField = 'name', findValue, status, page, limit } = query
-        let findObj = {};
-        let sortObj = {};
-        const skip = (page - 1) * limit;
-        if (status == 'active' || status == 'inactive') {
-            findObj = {
-                ...findObj,
-                status
-            }
-        };
-        if (findField) {
-            findObj[findField] = new RegExp(findValue, 'i');
-        };
-        if (sortField) {
-            sortObj[sortField] = sortDir;
-        };
+        const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
 
         let count = await CategoryModel.find(findObj).countDocuments();
         let data = await CategoryModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
@@ -49,8 +35,20 @@ class CategoryService {
     };
 
     getProduct = async (id) => {
-        let data = await ProductModel.find({ category: id })
-        return data
+        // let data = await ProductModel.find({ category: id })
+        // let count = await ProductModel.find({ category: id }).countDocuments();
+
+        let [data, count] = await Promise.all([
+            ProductModel.find({ category: id }),
+            ProductModel.find({ category: id }).countDocuments()
+        ]);
+
+        return {
+            // page,
+            // limit,
+            total: count,
+            data,
+        };
     };
 
     edit = async (id, obj) => {

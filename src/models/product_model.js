@@ -39,6 +39,14 @@ const productSchema = new Schema({
         type: Number,
         default: 0,
     },
+    sale_percent: {
+        type: Number,
+        default: 0,
+    },
+    is_special: {
+        type: Boolean,
+        default: false,
+    },
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'categories', //phải trùng với tên collection trong category_model.js

@@ -1,3 +1,4 @@
+const handlerFindObj = require('../helpers/find_obj');
 const ItemModel = require('../models/item_model');
 
 class ItemService {
@@ -7,23 +8,7 @@ class ItemService {
     };
 
     getAll = async (query) => {
-        const { sortField = 'createdAt', sortDir = 'asc', findField = 'name', findValue, status, page, limit } = query;
-        let findObj = {};
-        let sortObj = {};
-        const skip = (page - 1) * limit;
-        if (status == 'active' || status == 'inactive') {
-            findObj = {
-                ...findObj,
-                status
-            }
-        };
-        if (findField) {
-            findObj[findField] = new RegExp(findValue, 'i');
-        };
-        if (sortField) {
-            sortObj[sortField] = sortDir;
-        };
-
+        const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
         let count = await ItemModel.find(findObj).countDocuments();
         let data = await ItemModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
         return {

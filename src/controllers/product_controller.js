@@ -9,7 +9,6 @@ class ProductController {
 
     getAllProduct = async function (req, res, next) {
         // const data = await readJsonFile();
-        console.log(req.query);
         const data = await ProductService.getAll(req.query);
         res.send({
             message: "get all product",
@@ -45,12 +44,15 @@ class ProductController {
 
     addProduct = async function (req, res, next) {
         console.log(req.body);
-        // const data = await readJsonFile();
-        // data.push({
-        //     "id": data.length + 1,
-        //     "name": req.body.name,
-        // });
-        // writeFile(data);
+        let { price, sale_price, sale_percent } = req.body;
+        if (sale_price) {
+            sale_percent = ((price - sale_price) / price * 100).toFixed(0);
+        } else if (sale_percent) {
+            sale_price = price - (price * sale_percent / 100).toFixed(0);
+        }
+        req.body.sale_price = sale_price;
+        req.body.sale_percent = sale_percent;
+        console.log(req.body);
 
         await ProductService.add(req.body);
         res.send({

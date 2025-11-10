@@ -1,0 +1,39 @@
+let handlerFindObj = (query) => {
+    const { price, is_special = false, sortField = 'createdAt', sortDir = "asc", findField = 'name', findValue, status, page, limit } = query
+
+    let findObj = {};
+    let sortObj = {};
+    const skip = (page - 1) * limit;
+    if (status == 'active' || status == 'inactive') {
+        findObj = {
+            ...findObj,
+            status
+        }
+    };
+
+    if (is_special == 'true') {
+        findObj = {
+            ...findObj,
+            is_special: true
+        }
+    };
+
+    if (price) {
+        let [min, max] = price.split(",");
+        findObj = {
+            ...findObj,
+            price: { $gte: min, $lte: max }
+        }
+        console.log(findObj);
+    };
+
+    if (findField) {
+        findObj[findField] = new RegExp(findValue, 'i');
+    };
+
+    if (sortField) {
+        sortObj[sortField] = sortDir;
+    };
+    return { findObj, sortObj, skip, page, limit };
+}
+module.exports = handlerFindObj;
