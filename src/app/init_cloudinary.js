@@ -1,5 +1,5 @@
 const cloudinary = require('cloudinary').v2;
-
+//Khởi tạo cấu hình Cloudinary
 cloudinary.config({
     cloud_name: 'doetags3c',
     api_key: '558931797145857',

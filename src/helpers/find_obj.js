@@ -1,5 +1,6 @@
+//Tạo đối tượng tìm kiếm và sắp xếp từ query
 let handlerFindObj = (query) => {
-    const { price, is_special = false, sortField = 'createdAt', sortDir = "asc", findField = 'name', findValue, status, page, limit } = query
+    const { price, is_special = false, sortField = 'createdAt', sortDir = "desc", findField = 'name', findValue, status, page, limit } = query
 
     let findObj = {};
     let sortObj = {};

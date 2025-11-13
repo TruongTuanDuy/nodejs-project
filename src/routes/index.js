@@ -4,5 +4,6 @@ var router = express.Router();
 router.use('/item', require('./item_router'));
 router.use('/category', require('./category_router'));
 router.use('/product', require('./product_router'));
-//search riêng
+router.use('/search', require('./search_router'));
+
 module.exports = router;

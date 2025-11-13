@@ -9,8 +9,6 @@ const ProductController = require('../controllers/product_controller');
 /* GET home page. */
 router.get('/', asyncHandler(ProductController.getAllProduct));
 
-router.get('/search', asyncHandler(ProductController.searchProduct));
-
 router.get('/:id', asyncHandler(ProductController.getOneProduct));
 
 router.post('/', asyncHandler(ProductController.addProduct));

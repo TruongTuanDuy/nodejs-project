@@ -16,21 +16,9 @@ class ProductController {
         });
     };
 
-    searchProduct = async function (req, res, next) {
-        // const data = await readJsonFile();
-        console.log(req.query);
-        const data = await ProductService.searchProduct(req.query);
-        res.send({
-            message: "search product",
-            data
-        });
-    };
-
     getOneProduct = async function (req, res, next) {
         console.log(req.params);
-        // let id = req.params.id;
-        // const data = await readJsonFile();
-        // let result = data.find((e) => e.id == id);
+
         let id = req.params.id;
         if (!checkMogooseObjectId(id))
             throw new BadRequestError('không tìm thấy id');
@@ -62,10 +50,6 @@ class ProductController {
 
     deleteProduct = async function (req, res, next) {
         console.log(req.params);
-        // let id = req.params.id;
-        // let data = await readJsonFile();
-        // data = data.filter((e) => e.id !== id);
-        // writeFile(data);
 
         let id = req.params.id;
         const data = await ProductService.getOne(id);
@@ -79,18 +63,24 @@ class ProductController {
     editProduct = async function (req, res, next) {
         console.log(req.params);
         console.log(req.body);
-        // let id = req.params.id;
-        // let data = await readJsonFile();
-        // let productIndex = data.findIndex((e) => e.id == id);
-        // if (productIndex !== -1) {
-        //     data[productIndex].name = name;
-        // }
-        // writeFile(data);
 
         let id = req.params.id;
         let obj = req.body;
         const data = await ProductService.getOne(id);
         if (!data) throw new Error('id không tìm thấy');
+        let { price, sale_price, sale_percent } = req.body;
+        //phải khống chế khi sửa giá thì phải sửa sale_price hoặc sale_percent ở Đầu vào
+        if (!price) {
+            price = data.price;
+        }
+        if (sale_price) {
+            sale_percent = ((price - sale_price) / price * 100).toFixed(0);
+        } else if (sale_percent) {
+            sale_price = price - (price * sale_percent / 100).toFixed(0);
+        }
+        req.body.sale_price = sale_price;
+        req.body.sale_percent = sale_percent;
+        console.log(req.body);
 
         await ProductService.edit(id, obj);
 
@@ -100,10 +90,6 @@ class ProductController {
     }
 
     uploadMultiImgProduct = async function (req, res, next) {
-        // console.log(123);
-        // console.log(req.files);
-        // console.log(req.body);
-
         let id = req.params.id;
         let obj = req.body;
         let array = req.files;
@@ -122,16 +108,13 @@ class ProductController {
         };
 
         for (let index = 0; index < array.length; index++) {
-
             let path = array[index].path;
-            console.log(index);
-
+            // console.log(index);
             try {
                 let result = await cloudinary.uploader
                     .upload(path, { folder: 'categories' });
                 url.push(result.url);
                 // console.log(path);
-
                 deleteImg(path);
             } catch (error) {
                 deleteImg(path);
@@ -193,7 +176,6 @@ class ProductController {
             message: "upload image product"
         });
     }
-
 }
 
 module.exports = new ProductController()

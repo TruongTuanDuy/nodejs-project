@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+//Khởi tạo kết nối đến MongoDB
 class InitDB {
     constructor() {
         this.start()

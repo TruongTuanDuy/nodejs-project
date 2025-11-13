@@ -1,3 +1,4 @@
+//Đọc và ghi file JSON
 const fs = require('fs/promises');
 
 async function readJsonFile() {

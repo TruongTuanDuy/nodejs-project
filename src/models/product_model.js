@@ -10,6 +10,10 @@ const productSchema = new Schema({
     slug: {
         type: String,
     },
+    description: {
+        type: String,
+        default: null,
+    },
     sku: {
         type: String,
         trim: true,
