@@ -4,6 +4,8 @@ let { readJsonFile, writeFile } = require('../helpers/helper_json_file');
 let SearchService = require('../services/search_service');
 const cloudinary = require('../app/init_cloudinary');
 let { deleteImg, deleteMultiImg } = require('../helpers/deleteImg');
+const product_service = require('../services/product_service');
+const category_service = require('../services/category_service');
 
 class SearchController {
 
@@ -11,10 +13,22 @@ class SearchController {
         console.log(123);
 
         console.log(req.query);
-        const data = await SearchService.search(req.query);
+        const { type, keyword, limit = 10 } = req.query;
+
+        const [products, categories] = await Promise.all([
+            product_service.getAll({ findValue: keyword, limit }),
+            category_service.getAll({ findValue: keyword, limit }),
+
+        ]);
+        let resolve = {
+            products: products.data,
+            categories: categories.data
+        }
+
+        // const data = await SearchService.search(req.query);
         res.send({
             message: "search global",
-            data
+            data: type ? { [type]: resolve[type] } : resolve
         });
     };
 
