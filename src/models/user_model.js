@@ -38,17 +38,18 @@ const userSchema = new Schema({
     },
     status: {
         type: String,
-        default: "active",
+        default: "inactive",
         enum: ["active", "inactive"]
     },
+
+    resetToken: { type: String },
+    resetTokenExpire: { type: Number },
 },
     {
         timestamps: true,
     })
 
 userSchema.pre('save', function (next) {
-    // console.log(this.name);
-    // this.password = slugify(this.name, { lower: true });
     let hashPassword = bcrypt.hashSync(this.password, saltRounds, function (err, hash) {
         // Store hash in your password DB.
     });
@@ -56,6 +57,11 @@ userSchema.pre('save', function (next) {
     next();
 
 })
+
+// userSchema.add({
+//     resetToken: { type: String },
+//     resetTokenExpire: { type: Number },
+// });
 
 
 module.exports = model('users', userSchema);

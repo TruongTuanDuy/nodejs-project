@@ -1,6 +1,6 @@
 const handlerFindObj = require('../helpers/find_obj');
 const UserModel = require('../models/user_model');
-
+const crypto = require('crypto');
 class UserService {
 
     add = async (data) => {
@@ -9,11 +9,33 @@ class UserService {
 
     getUserByEmail = async (email) => {
         let data = await UserModel.findOne({ email: email });
-        console.log(data);
 
         return data;
     }
 
+    generateResetToken = async (user) => {
+        const token = crypto.randomBytes(32).toString('hex');
+        const tokenExpire = Date.now() + 1000 * 60 * 10; // 10 minutes
+
+        await UserModel.findByIdAndUpdate(user.id, { resetToken: token, resetTokenExpire: tokenExpire });
+
+        return token;
+    }
+
+    getUserByToken = async (token) => {
+        let data = await UserModel.findOne({ resetToken: token });
+
+        return data;
+    }
+
+    editPassword = async (user, newPassword) => {
+        // let data = await UserModel.findByIdAndUpdate(user.id, { password: newPassword });
+
+        user.password = newPassword;
+        await user.save();
+
+        return user;
+    }
 
     getAll = async (query) => {
         const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
