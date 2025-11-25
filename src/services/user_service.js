@@ -14,7 +14,10 @@ class UserService {
     }
 
     generateResetToken = async (user) => {
-        const token = crypto.randomBytes(32).toString('hex');
+        // random 6 số
+
+        const token = crypto.randomInt(100000, 999999).toString();
+
         const tokenExpire = Date.now() + 1000 * 60 * 10; // 10 minutes
 
         await UserModel.findByIdAndUpdate(user.id, { resetToken: token, resetTokenExpire: tokenExpire });
@@ -22,8 +25,8 @@ class UserService {
         return token;
     }
 
-    getUserByToken = async (token) => {
-        let data = await UserModel.findOne({ resetToken: token });
+    getUserByTokenEmail = async (token, email) => {
+        let data = await UserModel.findOne({ resetToken: token, email: email });
 
         return data;
     }
@@ -32,6 +35,8 @@ class UserService {
         // let data = await UserModel.findByIdAndUpdate(user.id, { password: newPassword });
 
         user.password = newPassword;
+        user.resetToken = '';
+        user.resetTokenExpire = '';
         await user.save();
 
         return user;

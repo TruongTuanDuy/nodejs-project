@@ -1,11 +1,8 @@
 var { ErrorCustom, BadRequestError, AuthentificationError } = require('../app/core/error_custom');
-const { checkMogooseObjectId } = require('../helpers/check');
-let { readJsonFile, writeFile } = require('../helpers/helper_json_file');
 let UserService = require('../services/user_service');
-const cloudinary = require('../app/init_cloudinary');
-let { deleteImg, deleteMultiImg } = require('../helpers/deleteImg');
 const bcrypt = require('bcrypt');
-
+var jwt = require('jsonwebtoken');
+const { sendMail } = require('../helpers/send_mail');
 
 class AuthController {
 
@@ -30,11 +27,13 @@ class AuthController {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) throw new BadRequestError("Mật khẩu không đúng");
 
+        var token = jwt.sign({ userId: user.id }, 'duy', { expiresIn: '1d' });
+
         res.send({
             message: "login",
+            token
         });
 
-        return user;
     };
 
     forgotPassword = async function (req, res, next) {
@@ -45,20 +44,24 @@ class AuthController {
 
         const token = await UserService.generateResetToken(user);
 
+        sendMail(email, "Reset Password Token", `Mã xác thực của bạn là: ${token}`);
+
         res.send({
-            message: "Tạo token thành công",
+            message: "Kiểm tra email để nhận mã xác thực",
         });
 
-        return token;
+
     };
 
     resetPassword = async function (req, res, next) {
-        const { token, newPassword } = req.body;
+        const { token, email, newPassword } = req.body;
         console.log(token, newPassword);
 
-        let user = await UserService.getUserByToken(token);
-        if (!user) throw new BadRequestError("Mã xác thực không đúng");
+        let user = await UserService.getUserByTokenEmail(token, email);
+        if (!user) throw new BadRequestError("Thông tin không hợp lệ");
+
         if (Date.now() > user.resetTokenExpire) throw new BadRequestError("Mã xác thực đã hết hạn");
+
         await UserService.editPassword(user, newPassword);
 
         res.send({
