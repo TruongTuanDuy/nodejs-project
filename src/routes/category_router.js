@@ -1,11 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var { asyncHandler } = require('../helpers/async_handler');
-const upload = require('../helpers/uploadImg');
-
+var { asyncHandler } = require('../app/helpers/async_handler');
+const upload = require('../app/helpers/uploadImg');
 
 const CategoryController = require('../controllers/category_controller');
-const { checkLogin } = require('../app/middleware/check_login');
+const { checkLogin } = require('../app/middlewares/check_login');
 
 /* GET home page. */
 router.get('/', asyncHandler(CategoryController.getAllCategory));

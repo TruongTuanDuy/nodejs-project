@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var { asyncHandler } = require('../helpers/async_handler');
-const upload = require('../helpers/uploadImg');
-
+var { asyncHandler } = require('../app/helpers/async_handler');
+const upload = require('../app/helpers/uploadImg');
 
 const ProductController = require('../controllers/product_controller');
 

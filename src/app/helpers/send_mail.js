@@ -1,4 +1,4 @@
-const transporter = require("../app/init_mailer");
+const transporter = require("../core/init_mailer");
 // Wrap in an async IIFE so we can use await.
 sendMail = async (email, subject, text) => {
     const info = await transporter.sendMail({

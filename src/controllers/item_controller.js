@@ -1,6 +1,6 @@
 var { ErrorCustom, BadRequestError, AuthentificationError } = require('../app/core/error_custom');
-const { checkMogooseObjectId } = require('../helpers/check');
-let { readJsonFile, writeFile } = require('../helpers/helper_json_file');
+const { checkMogooseObjectId } = require('../app/helpers/check');
+let { readJsonFile, writeFile } = require('../app/helpers/helper_json_file');
 let ItemService = require('../services/item_service');
 
 class ItemController {

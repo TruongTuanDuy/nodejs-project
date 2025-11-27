@@ -1,14 +1,12 @@
 var { ErrorCustom, BadRequestError, AuthentificationError } = require('../app/core/error_custom');
-const { checkMogooseObjectId } = require('../helpers/check');
-let { readJsonFile, writeFile } = require('../helpers/helper_json_file');
+const { checkMogooseObjectId } = require('../app/helpers/check');
 let ProductService = require('../services/product_service');
-const cloudinary = require('../app/init_cloudinary');
-let { deleteImg, deleteMultiImg } = require('../helpers/deleteImg');
+const cloudinary = require('../app/core/init_cloudinary');
+let { deleteImg, deleteMultiImg } = require('../app/helpers/deleteImg');
 
 class ProductController {
 
     getAllProduct = async function (req, res, next) {
-        // const data = await readJsonFile();
         const data = await ProductService.getAll(req.query);
         res.send({
             message: "get all product",
@@ -17,8 +15,6 @@ class ProductController {
     };
 
     getOneProduct = async function (req, res, next) {
-        console.log(req.params);
-
         let id = req.params.id;
         if (!checkMogooseObjectId(id))
             throw new BadRequestError('không tìm thấy id');
@@ -31,7 +27,6 @@ class ProductController {
     };
 
     addProduct = async function (req, res, next) {
-        console.log(req.body);
         let { price, sale_price, sale_percent } = req.body;
         if (sale_price) {
             sale_percent = ((price - sale_price) / price * 100).toFixed(0);
@@ -40,7 +35,6 @@ class ProductController {
         }
         req.body.sale_price = sale_price;
         req.body.sale_percent = sale_percent;
-        console.log(req.body);
 
         await ProductService.add(req.body);
         res.send({
@@ -49,8 +43,6 @@ class ProductController {
     }
 
     deleteProduct = async function (req, res, next) {
-        console.log(req.params);
-
         let id = req.params.id;
         const data = await ProductService.getOne(id);
         if (!data) throw new BadRequestError('id không tìm thấy');
@@ -61,9 +53,6 @@ class ProductController {
     }
 
     editProduct = async function (req, res, next) {
-        console.log(req.params);
-        console.log(req.body);
-
         let id = req.params.id;
         let obj = req.body;
         const data = await ProductService.getOne(id);
@@ -80,7 +69,6 @@ class ProductController {
         }
         req.body.sale_price = sale_price;
         req.body.sale_percent = sale_percent;
-        console.log(req.body);
 
         await ProductService.edit(id, obj);
 
@@ -109,12 +97,10 @@ class ProductController {
 
         for (let index = 0; index < array.length; index++) {
             let path = array[index].path;
-            // console.log(index);
             try {
                 let result = await cloudinary.uploader
                     .upload(path, { folder: 'categories' });
                 url.push(result.url);
-                // console.log(path);
                 deleteImg(path);
             } catch (error) {
                 deleteImg(path);
@@ -140,9 +126,6 @@ class ProductController {
     }
 
     uploadImgProduct = async function (req, res, next) {
-        console.log(req.file);
-        // console.log(req.body);
-
         let id = req.params.id;
         let obj = req.body;
         let path = req.file.path;

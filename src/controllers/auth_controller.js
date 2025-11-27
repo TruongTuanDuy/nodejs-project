@@ -2,7 +2,7 @@ var { ErrorCustom, BadRequestError, AuthentificationError } = require('../app/co
 let UserService = require('../services/user_service');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-const { sendMail } = require('../helpers/send_mail');
+const { sendMail } = require('../app/helpers/send_mail');
 
 class AuthController {
 
@@ -62,14 +62,58 @@ class AuthController {
 
         if (Date.now() > user.resetTokenExpire) throw new BadRequestError("Mã xác thực đã hết hạn");
 
-        await UserService.editPassword(user, newPassword);
+        await UserService.resetPassword(user, newPassword);
 
         res.send({
             message: "Đổi mật khẩu thành công",
         });
-
     };
 
+    changePassword = async function (req, res, next) {
+        const { currentPassword, newPassword } = req.body;
+        const user = await UserService.getOne(req.userId);
+        console.log(currentPassword, newPassword);
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) throw new BadRequestError("Mật khẩu hiện tại không đúng");
+
+        const isDuplicate = await bcrypt.compare(newPassword, user.password);
+        if (isDuplicate) throw new BadRequestError("Mật khẩu mới trùng mật khẩu hiện tại");
+
+        await UserService.changePassword(user, newPassword);
+
+        res.send({
+            message: "Đổi mật khẩu thành công",
+        });
+    };
+
+    getMe = async function (req, res, next) {
+        const data = await UserService.getOne(req.userId);
+        if (!data) throw new Error('không tìm thấy dữ liệu của bạn');
+        res.send({
+            message: "get Me",
+            data
+        });
+    };
+
+    editMe = async function (req, res, next) {
+        let id = req.userId;
+        let obj = req.body;
+
+        const allowedFields = ["name", "tel", "address", "avatar"];
+        const updateData = {};
+
+        allowedFields.forEach(field => {
+            if (obj[field] !== undefined) {
+                updateData[field] = obj[field];
+            }
+        });
+
+        await UserService.edit(id, updateData);
+        res.send({
+            message: "edit Me",
+        });
+    };
 }
 
 module.exports = new AuthController()

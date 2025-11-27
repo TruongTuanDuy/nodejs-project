@@ -1,4 +1,4 @@
-const handlerFindObj = require('../helpers/find_obj');
+const handlerFindObj = require('../app/helpers/find_obj');
 const ItemModel = require('../models/item_model');
 
 class ItemService {

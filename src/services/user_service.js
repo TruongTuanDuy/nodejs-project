@@ -1,8 +1,8 @@
-const handlerFindObj = require('../helpers/find_obj');
+const handlerFindObj = require('../app/helpers/find_obj');
 const UserModel = require('../models/user_model');
 const crypto = require('crypto');
-class UserService {
 
+class UserService {
     add = async (data) => {
         await UserModel.create(data)
     };
@@ -14,10 +14,7 @@ class UserService {
     }
 
     generateResetToken = async (user) => {
-        // random 6 số
-
         const token = crypto.randomInt(100000, 999999).toString();
-
         const tokenExpire = Date.now() + 1000 * 60 * 10; // 10 minutes
 
         await UserModel.findByIdAndUpdate(user.id, { resetToken: token, resetTokenExpire: tokenExpire });
@@ -31,12 +28,20 @@ class UserService {
         return data;
     }
 
-    editPassword = async (user, newPassword) => {
-        // let data = await UserModel.findByIdAndUpdate(user.id, { password: newPassword });
+    resetPassword = async (user, newPassword) => {
+        // let data = await UserModel.findByIdAndUpdate(user.id, { password: newPassword });  // Không dùng cách này vì pre save không chạy
 
         user.password = newPassword;
         user.resetToken = '';
         user.resetTokenExpire = '';
+        await user.save();
+
+        return user;
+    }
+
+    changePassword = async (user, newPassword) => {
+
+        user.password = newPassword;
         await user.save();
 
         return user;
@@ -57,7 +62,6 @@ class UserService {
 
     getOne = async (id) => {
         let data = await UserModel.findById(id)
-            .populate('category', 'name slug');//
         return data
     };
 

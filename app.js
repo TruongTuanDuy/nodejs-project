@@ -6,7 +6,7 @@ var logger = require('morgan');
 const mongoose = require('mongoose');
 const { error, log } = require('console');
 
-require('./src/app/init_db');
+require('./src/app/core/init_db');
 
 var app = express();
 

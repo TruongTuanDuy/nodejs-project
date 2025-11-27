@@ -1,3 +1,6 @@
+// Hình như sai, ko xài file này
+// Service ko nên gọi đến Modle khác trực tiếp, mà nên thông qua các service tương ứng
+
 const CategoryModel = require('../models/category_model');
 const ProductModel = require('../models/product_model');
 
