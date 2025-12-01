@@ -46,6 +46,11 @@ class CategoryController {
     };
 
     deleteCategory = async function (req, res, next) {
+        //get url and method
+
+
+        console.log(req.baseUrl, req.method);
+
         let id = req.params.id;
         const data = await CategoryService.getOne(id);
         if (!data) throw new BadRequestError('id không tìm thấy');

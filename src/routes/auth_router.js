@@ -17,7 +17,7 @@ router.put('/reset-password', asyncHandler(AuthController.resetPassword));
 
 router.use(checkLogin);
 
-router.get('/me', asyncHandler(AuthController.getMe));
+router.get('/me', asyncHandler(AuthController.getMe));//info
 
 router.put('/me', asyncHandler(AuthController.editMe));
 

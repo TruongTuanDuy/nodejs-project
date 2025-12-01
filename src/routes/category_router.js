@@ -5,6 +5,7 @@ const upload = require('../app/helpers/uploadImg');
 
 const CategoryController = require('../controllers/category_controller');
 const { checkLogin } = require('../app/middlewares/check_login');
+const { checkPermission } = require('../app/middlewares/check_permission');
 
 /* GET home page. */
 router.get('/', asyncHandler(CategoryController.getAllCategory));
@@ -14,6 +15,7 @@ router.get('/:id', asyncHandler(CategoryController.getOneCategory));
 router.get('/:id/product', asyncHandler(CategoryController.getProductByCategory));
 
 router.use(checkLogin);
+router.use(checkPermission);
 router.post('/', asyncHandler(CategoryController.addCategory));
 
 router.delete('/:id', asyncHandler(CategoryController.deleteCategory));

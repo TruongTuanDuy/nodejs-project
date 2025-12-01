@@ -41,6 +41,11 @@ const userSchema = new Schema({
         default: "inactive",
         enum: ["active", "inactive"]
     },
+    group_user: {
+        type: Schema.Types.ObjectId,
+        ref: 'group_users', //phải trùng với tên collection 
+    },
+
 
     resetToken: { type: String },
     resetTokenExpire: { type: Number },

@@ -100,16 +100,16 @@ class AuthController {
         let id = req.userId;
         let obj = req.body;
 
-        const allowedFields = ["name", "tel", "address", "avatar"];
-        const updateData = {};
+        // const allowedFields = ["name", "tel", "address", "avatar"];
+        // const updateData = {};
 
-        allowedFields.forEach(field => {
-            if (obj[field] !== undefined) {
-                updateData[field] = obj[field];
-            }
-        });
+        // allowedFields.forEach(field => {
+        //     if (obj[field] !== undefined) {
+        //         updateData[field] = obj[field];
+        //     }
+        // });
 
-        await UserService.edit(id, updateData);
+        await UserService.editInfo(id, req.body);
         res.send({
             message: "edit Me",
         });

@@ -61,12 +61,16 @@ class UserService {
     };
 
     getOne = async (id) => {
-        let data = await UserModel.findById(id)
+        let data = await UserModel.findById(id).populate("group_user");
         return data
     };
 
     edit = async (id, obj) => {
         await UserModel.findByIdAndUpdate(id, obj)
+    };
+
+    editInfo = async (id, { name, tel, address, avatar }) => {
+        await UserModel.findByIdAndUpdate(id, { name, tel, address, avatar }) //null thì bỏ qua
     };
 
     delete = async (id) => {
