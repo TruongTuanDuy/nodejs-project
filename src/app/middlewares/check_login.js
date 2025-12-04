@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
+
 function checkLogin(req, res, next) {
+    // check header authorization
     if (!req.headers.authorization) {
         res.status(401).send({
             message: "Unauthorized",
@@ -10,7 +12,7 @@ function checkLogin(req, res, next) {
     let token = req.headers.authorization.split(' ')[1];
     try {
         var decoded = jwt.verify(token, 'duy');
-        console.log(decoded) // bar
+        console.log(decoded)
         req.userId = decoded.userId;
         next();
 

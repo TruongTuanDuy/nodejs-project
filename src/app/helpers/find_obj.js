@@ -1,6 +1,6 @@
 //Tạo đối tượng tìm kiếm và sắp xếp từ query
 let handlerFindObj = (query) => {
-    const { price, is_special = false, sortField = 'createdAt', sortDir = "desc", findField = 'name', findValue, status, page, limit } = query
+    const { price, is_special = false, sortField = 'createdAt', sortDir = "desc", findField = 'name', findValue, status, page = 1, limit = 20 } = query
 
     let findObj = {};
     let sortObj = {};
@@ -25,10 +25,9 @@ let handlerFindObj = (query) => {
             ...findObj,
             price: { $gte: min, $lte: max }
         }
-        console.log(findObj);
     };
 
-    if (findField) {
+    if (findValue) {
         findObj[findField] = new RegExp(findValue, 'i');
     };
 

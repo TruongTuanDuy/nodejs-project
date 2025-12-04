@@ -62,10 +62,8 @@ const productSchema = new Schema({
     });
 
 productSchema.pre('save', function (next) {
-    // console.log(this.name);
     this.slug = slugify(this.name, { lower: true });
     next();
-
 })
 
 module.exports = model('products', productSchema);

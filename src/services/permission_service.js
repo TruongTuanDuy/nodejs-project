@@ -3,11 +3,11 @@ const ItemModel = require('../models/permission_model');
 
 class PermissionService {
 
-    add = async (data) => {
+    addItem = async (data) => {
         await ItemModel.create(data)
     };
 
-    getAll = async (query) => {
+    getAllItem = async (query) => {
         const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
         let count = await ItemModel.find(findObj).countDocuments();
         let data = await ItemModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
@@ -19,22 +19,23 @@ class PermissionService {
         };
     };
 
-    findOne = async (params) => {
+    getPermission = async (params) => {
         let data = await ItemModel.findOne(params)
         return data
     };
 
-    getOne = async (id) => {
+    getItemById = async (id) => {
         let data = await ItemModel.findById(id)
         return data
     };
 
-    edit = async (id, obj) => {
+    deleteItemById = async (id) => {
+        await ItemModel.findByIdAndDelete(id)
+    };
+
+    editItemById = async (id, obj) => {
         await ItemModel.findByIdAndUpdate(id, obj)
     };
 
-    delete = async (id) => {
-        await ItemModel.findByIdAndDelete(id)
-    };
 }
 module.exports = new PermissionService();

@@ -6,13 +6,10 @@ const ItemController = require('../controllers/group_user_controller');
 
 /* GET home page. */
 router.get('/', asyncHandler(ItemController.getAllItem));
-
-router.get('/:id', asyncHandler(ItemController.getOneItem));
+router.get('/:id', asyncHandler(ItemController.getItemById));
 
 router.post('/', asyncHandler(ItemController.addItem));
-
-router.delete('/:id', asyncHandler(ItemController.deleteItem));
-
-router.put('/:id', asyncHandler(ItemController.editItem));
+router.delete('/:id', asyncHandler(ItemController.deleteItemById));
+router.put('/:id', asyncHandler(ItemController.editItemById));
 
 module.exports = router;

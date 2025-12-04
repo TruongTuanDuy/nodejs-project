@@ -1,5 +1,4 @@
 const { Schema, model, default: mongoose } = require('mongoose');
-var slugify = require('slugify');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -10,6 +9,8 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
+        unique: true,
+        require: true,
         validate: [
             function (email) {
                 var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -46,7 +47,6 @@ const userSchema = new Schema({
         ref: 'group_users', //phải trùng với tên collection 
     },
 
-
     resetToken: { type: String },
     resetTokenExpire: { type: Number },
 },
@@ -67,6 +67,5 @@ userSchema.pre('save', function (next) {
 //     resetToken: { type: String },
 //     resetTokenExpire: { type: Number },
 // });
-
 
 module.exports = model('users', userSchema);

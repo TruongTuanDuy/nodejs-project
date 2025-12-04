@@ -3,53 +3,13 @@ const UserModel = require('../models/user_model');
 const crypto = require('crypto');
 
 class UserService {
-    add = async (data) => {
+
+    addUser = async (data) => {
         await UserModel.create(data)
     };
 
-    getUserByEmail = async (email) => {
-        let data = await UserModel.findOne({ email: email });
-
-        return data;
-    }
-
-    generateResetToken = async (user) => {
-        const token = crypto.randomInt(100000, 999999).toString();
-        const tokenExpire = Date.now() + 1000 * 60 * 10; // 10 minutes
-
-        await UserModel.findByIdAndUpdate(user.id, { resetToken: token, resetTokenExpire: tokenExpire });
-
-        return token;
-    }
-
-    getUserByTokenEmail = async (token, email) => {
-        let data = await UserModel.findOne({ resetToken: token, email: email });
-
-        return data;
-    }
-
-    resetPassword = async (user, newPassword) => {
-        // let data = await UserModel.findByIdAndUpdate(user.id, { password: newPassword });  // Không dùng cách này vì pre save không chạy
-
-        user.password = newPassword;
-        user.resetToken = '';
-        user.resetTokenExpire = '';
-        await user.save();
-
-        return user;
-    }
-
-    changePassword = async (user, newPassword) => {
-
-        user.password = newPassword;
-        await user.save();
-
-        return user;
-    }
-
-    getAll = async (query) => {
+    getAllUser = async (query) => {
         const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
-
         let count = await UserModel.find(findObj).countDocuments();
         let data = await UserModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
         return {
@@ -60,21 +20,55 @@ class UserService {
         };
     };
 
-    getOne = async (id) => {
+    getUserById = async (id) => {
         let data = await UserModel.findById(id).populate("group_user");
         return data
     };
 
-    edit = async (id, obj) => {
+    deleteUserById = async (id) => {
+        await UserModel.findByIdAndDelete(id)
+    };
+
+    editUserById = async (id, obj) => {
         await UserModel.findByIdAndUpdate(id, obj)
     };
 
-    editInfo = async (id, { name, tel, address, avatar }) => {
-        await UserModel.findByIdAndUpdate(id, { name, tel, address, avatar }) //null thì bỏ qua
+    getUserByEmail = async (email) => {
+        let data = await UserModel.findOne({ email: email });
+        return data;
+    }
+
+    generateResetToken = async (user) => {
+        const token = crypto.randomInt(100000, 999999).toString();
+        const tokenExpire = Date.now() + 1000 * 60 * 10; // 10 minutes
+        await UserModel.findByIdAndUpdate(user.id, { resetToken: token, resetTokenExpire: tokenExpire });
+        return token;
+    }
+
+    getUserByTokenEmail = async (token, email) => {
+        let data = await UserModel.findOne({ resetToken: token, email: email });
+        return data;
+    }
+
+    resetPassword = async (user, newPassword) => {
+        // let data = await UserModel.findByIdAndUpdate(user.id, { password: newPassword });  // Không dùng cách này vì pre save không chạy
+        user.password = newPassword;
+        user.resetToken = '';
+        user.resetTokenExpire = '';
+        await user.save();
+        return user;
+    }
+
+    changePassword = async (user, newPassword) => {
+        user.password = newPassword;
+        await user.save();
+        return user;
+    }
+
+    editMe = async (id, { name, tel, address, avatar }) => {  //ko gán (null) thì bỏ qua, có gán thì update
+        await UserModel.findByIdAndUpdate(id, { name, tel, address, avatar })
     };
 
-    delete = async (id) => {
-        await UserModel.findByIdAndDelete(id)
-    };
+
 }
 module.exports = new UserService();

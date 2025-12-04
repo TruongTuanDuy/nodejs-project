@@ -3,11 +3,11 @@ const ProductModel = require('../models/product_model');
 
 class ProductService {
 
-    add = async (data) => {
+    addProduct = async (data) => {
         await ProductModel.create(data)
     };
 
-    getAll = async (query) => {
+    getAllProduct = async (query) => {
         const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
 
         let count = await ProductModel.find(findObj).countDocuments();
@@ -20,18 +20,18 @@ class ProductService {
         };
     };
 
-    getOne = async (id) => {
+    getProductById = async (id) => {
         let data = await ProductModel.findById(id)
             .populate('category', 'name slug');//
         return data
     };
 
-    edit = async (id, obj) => {
-        await ProductModel.findByIdAndUpdate(id, obj)
+    deleteProductById = async (id) => {
+        await ProductModel.findByIdAndDelete(id)
     };
 
-    delete = async (id) => {
-        await ProductModel.findByIdAndDelete(id)
+    editProductById = async (id, obj) => {
+        await ProductModel.findByIdAndUpdate(id, obj)
     };
 }
 module.exports = new ProductService();

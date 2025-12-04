@@ -6,26 +6,6 @@ let { deleteImg, deleteMultiImg } = require('../app/helpers/deleteImg');
 
 class ProductController {
 
-    getAllProduct = async function (req, res, next) {
-        const data = await ProductService.getAll(req.query);
-        res.send({
-            message: "get all product",
-            data
-        });
-    };
-
-    getOneProduct = async function (req, res, next) {
-        let id = req.params.id;
-        if (!checkMogooseObjectId(id))
-            throw new BadRequestError('không tìm thấy id');
-        const data = await ProductService.getOne(id);
-        if (!data) throw new Error('không tìm thấy id');
-        res.send({
-            message: "get one product",
-            data
-        });
-    };
-
     addProduct = async function (req, res, next) {
         let { price, sale_price, sale_percent } = req.body;
         if (sale_price) {
@@ -42,20 +22,41 @@ class ProductController {
         });
     }
 
-    deleteProduct = async function (req, res, next) {
+    getAllProduct = async function (req, res, next) {
+        const data = await ProductService.getAllProduct(req.query);
+        res.send({
+            message: "get all product",
+            data
+        });
+    };
+
+    getProductById = async function (req, res, next) {
         let id = req.params.id;
-        const data = await ProductService.getOne(id);
+        if (!checkMogooseObjectId(id))
+            throw new BadRequestError('không tìm thấy id');
+        const data = await ProductService.getProductById(id);
+        if (!data) throw new Error('không tìm thấy id');
+        res.send({
+            message: "get one product",
+            data
+        });
+    };
+
+
+    deleteProductById = async function (req, res, next) {
+        let id = req.params.id;
+        const data = await ProductService.getProductById(id);
         if (!data) throw new BadRequestError('id không tìm thấy');
-        await ProductService.delete(id);
+        await ProductService.deleteProductById(id);
         res.send({
             message: "delete product"
         });
     }
 
-    editProduct = async function (req, res, next) {
+    editProductById = async function (req, res, next) {
         let id = req.params.id;
         let obj = req.body;
-        const data = await ProductService.getOne(id);
+        const data = await ProductService.getProductById(id);
         if (!data) throw new Error('id không tìm thấy');
         let { price, sale_price, sale_percent } = req.body;
         //phải khống chế khi sửa giá thì phải sửa sale_price hoặc sale_percent ở Đầu vào
@@ -70,7 +71,7 @@ class ProductController {
         req.body.sale_price = sale_price;
         req.body.sale_percent = sale_percent;
 
-        await ProductService.edit(id, obj);
+        await ProductService.editProductById(id, obj);
 
         res.send({
             message: "edit product"
@@ -88,7 +89,7 @@ class ProductController {
             throw new BadRequestError('không tìm thấy id');
         }
 
-        const data = await ProductService.getOne(id);
+        const data = await ProductService.getProductById(id);
 
         if (!data) {
             deleteMultiImg(array);
@@ -106,19 +107,8 @@ class ProductController {
                 deleteImg(path);
                 throw new ErrorCustom('Lỗi tải ảnh lên Cloudinary', 500, err);
             }
-            // .then(result => console.log(result));
-            // .then(result => {
-            //     obj.thumb = result.url;
-            //     ProductService.edit(id, obj);
-            // }).catch(err => {
-            //     throw new ErrorCustom('Lỗi tải ảnh lên Cloudinary', 500, err);
-            // })
-            // .finally(() => {
-            //     deleteImg(path);
-            // })
-
         }
-        ProductService.edit(id, { images: url });
+        ProductService.editProductById(id, { images: url });
 
         res.send({
             message: "upload image product"
@@ -135,7 +125,7 @@ class ProductController {
             throw new BadRequestError('không tìm thấy id');
         }
 
-        const data = await ProductService.getOne(id);
+        const data = await ProductService.getProductById(id);
 
         if (!data) {
             deleteImg(path);
@@ -143,11 +133,10 @@ class ProductController {
         };
 
         cloudinary.uploader
-            .upload(path, { folder: 'categories' })
-            // .then(result => console.log(result));
+            .upload(path, { folder: 'products' })
             .then(result => {
                 obj.thumb = result.url;
-                ProductService.edit(id, obj);
+                ProductService.editProductById(id, obj);
                 deleteImg(path);
 
             }).catch(err => {

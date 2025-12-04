@@ -12,7 +12,7 @@ class AuthController {
         let user = await UserService.getUserByEmail(email);
         if (user) throw new BadRequestError("Email đã tồn tại");
 
-        await UserService.add({ email, password });
+        await UserService.addUser({ email, password });
         res.send({
             message: "register",
         });
@@ -55,7 +55,6 @@ class AuthController {
 
     resetPassword = async function (req, res, next) {
         const { token, email, newPassword } = req.body;
-        console.log(token, newPassword);
 
         let user = await UserService.getUserByTokenEmail(token, email);
         if (!user) throw new BadRequestError("Thông tin không hợp lệ");
@@ -65,14 +64,13 @@ class AuthController {
         await UserService.resetPassword(user, newPassword);
 
         res.send({
-            message: "Đổi mật khẩu thành công",
+            message: "Đặt lại mật khẩu thành công",
         });
     };
 
     changePassword = async function (req, res, next) {
         const { currentPassword, newPassword } = req.body;
-        const user = await UserService.getOne(req.userId);
-        console.log(currentPassword, newPassword);
+        const user = await UserService.getUserById(req.userId);
 
         const isMatch = await bcrypt.compare(currentPassword, user.password);
         if (!isMatch) throw new BadRequestError("Mật khẩu hiện tại không đúng");
@@ -88,7 +86,7 @@ class AuthController {
     };
 
     getMe = async function (req, res, next) {
-        const data = await UserService.getOne(req.userId);
+        const data = await UserService.getUserById(req.userId);
         if (!data) throw new Error('không tìm thấy dữ liệu của bạn');
         res.send({
             message: "get Me",
@@ -102,14 +100,13 @@ class AuthController {
 
         // const allowedFields = ["name", "tel", "address", "avatar"];
         // const updateData = {};
-
         // allowedFields.forEach(field => {
         //     if (obj[field] !== undefined) {
         //         updateData[field] = obj[field];
         //     }
         // });
 
-        await UserService.editInfo(id, req.body);
+        await UserService.editMe(id, req.body);
         res.send({
             message: "edit Me",
         });

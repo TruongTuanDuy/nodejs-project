@@ -37,7 +37,6 @@ const categorySchema = new Schema({
     });
 
 categorySchema.pre('save', function (next) {
-    console.log(this.name);
     this.slug = slugify(this.name, { lower: true });
     next();
 

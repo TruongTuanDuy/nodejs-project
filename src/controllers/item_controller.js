@@ -8,14 +8,14 @@ class ItemController {
     getAllItem = async function (req, res, next) {
         // const data = await readJsonFile();
         console.log(req.query);
-        const data = await ItemService.getAll(req.query);
+        const data = await ItemService.getAllItem(req.query);
         res.send({
             message: "get all item",
             data
         });
     };
 
-    getOneItem = async function (req, res, next) {
+    getItemById = async function (req, res, next) {
         console.log(req.params);
         // let id = req.params.id;
         // const data = await readJsonFile();
@@ -23,7 +23,7 @@ class ItemController {
         let id = req.params.id;
         if (!checkMogooseObjectId(id))
             throw new BadRequestError('không tìm thấy id');
-        const data = await ItemService.getOne(id);
+        const data = await ItemService.getItemById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
             message: "get one item",
@@ -40,13 +40,13 @@ class ItemController {
         // });
         // writeFile(data);
 
-        await ItemService.add(req.body);
+        await ItemService.addItem(req.body);
         res.send({
             message: "add item",
         });
     }
 
-    deleteItem = async function (req, res, next) {
+    deleteItemById = async function (req, res, next) {
         console.log(req.params);
         // let id = req.params.id;
         // let data = await readJsonFile();
@@ -54,15 +54,15 @@ class ItemController {
         // writeFile(data);
 
         let id = req.params.id;
-        const data = await ItemService.getOne(id);
+        const data = await ItemService.getItemById(id);
         if (!data) throw new BadRequestError('id không tìm thấy');
-        await ItemService.delete(id);
+        await ItemService.deleteItemById(id);
         res.send({
             message: "delete item"
         });
     }
 
-    editItem = async function (req, res, next) {
+    editItemById = async function (req, res, next) {
         console.log(req.params);
         console.log(req.body);
         // let id = req.params.id;
@@ -75,10 +75,10 @@ class ItemController {
 
         let id = req.params.id;
         let obj = req.body;
-        const data = await ItemService.getOne(id);
+        const data = await ItemService.getItemById(id);
         if (!data) throw new Error('id không tìm thấy');
 
-        await ItemService.edit(id, obj);
+        await ItemService.editItemById(id, obj);
 
         res.send({
             message: "edit item"

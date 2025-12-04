@@ -4,11 +4,11 @@ const ProductModel = require('../models/product_model');
 
 class CategoryService {
 
-    add = async (data) => {
+    addCategory = async (data) => {
         await CategoryModel.create(data)
     };
 
-    getAll = async (query) => {
+    getAllCategory = async (query) => {
         const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
 
         let count = await CategoryModel.find(findObj).countDocuments();
@@ -21,7 +21,7 @@ class CategoryService {
         };
     };
 
-    getOne = async (id) => {
+    getCategoryById = async (id) => {
         // let data = CategoryModel.findById(id).then(data => data)
         // console.log(data);
 
@@ -34,7 +34,7 @@ class CategoryService {
         return data
     };
 
-    getProduct = async (id) => {
+    getProductByCategory = async (id) => {
         // let data = await ProductModel.find({ category: id })
         // let count = await ProductModel.find({ category: id }).countDocuments();
 
@@ -51,12 +51,12 @@ class CategoryService {
         };
     };
 
-    edit = async (id, obj) => {
-        await CategoryModel.findByIdAndUpdate(id, obj)
+    deleteCategoryById = async (id) => {
+        await CategoryModel.findByIdAndDelete(id)
     };
 
-    delete = async (id) => {
-        await CategoryModel.findByIdAndDelete(id)
+    editCategoryById = async (id, obj) => {
+        await CategoryModel.findByIdAndUpdate(id, obj)
     };
 }
 module.exports = new CategoryService();

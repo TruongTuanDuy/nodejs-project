@@ -3,11 +3,11 @@ const ItemModel = require('../models/item_model');
 
 class ItemService {
 
-    add = async (data) => {
+    addItem = async (data) => {
         await ItemModel.create(data)
     };
 
-    getAll = async (query) => {
+    getAllItem = async (query) => {
         const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
         let count = await ItemModel.find(findObj).countDocuments();
         let data = await ItemModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
@@ -19,7 +19,7 @@ class ItemService {
         };
     };
 
-    getOne = async (id) => {
+    getItemById = async (id) => {
         // let data = ItemModel.findById(id).then(data => data)
         // console.log(data);
 
@@ -32,12 +32,13 @@ class ItemService {
         return data
     };
 
-    edit = async (id, obj) => {
+    deleteItemById = async (id) => {
+        await ItemModel.findByIdAndDelete(id)
+    };
+
+    editItemById = async (id, obj) => {
         await ItemModel.findByIdAndUpdate(id, obj)
     };
 
-    delete = async (id) => {
-        await ItemModel.findByIdAndDelete(id)
-    };
 }
 module.exports = new ItemService();

@@ -3,10 +3,10 @@ const permissionService = require('../../services/permission_service');
 const user_service = require('../../services/user_service');
 
 async function checkPermission(req, res, next) {
-    let permission = await permissionService.findOne({ router: req.baseUrl, method: req.method });
+    let permission = await permissionService.getPermission({ router: req.baseUrl, method: req.method });
     console.log(permission._id);
 
-    let user = await user_service.getOne(req.userId);
+    let user = await user_service.getUserById(req.userId);
     console.log(user.group_user.permission_ids);
 
     if (user.group_user.permission_ids.includes(permission._id)) {
@@ -16,6 +16,5 @@ async function checkPermission(req, res, next) {
             message: "Not permission",
         });
     }
-
 };
 module.exports = { checkPermission };
