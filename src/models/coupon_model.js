@@ -1,48 +1,47 @@
 const { Schema, model, default: mongoose } = require('mongoose');
-var slugify = require('slugify');
 
 const couponSchema = new Schema({
     code: {
         type: String,
         required: true,
+        unique: true, //có cần không???
         trim: true,
     },
-    type: {
+    discountType: {
         type: String,
-        default: "discount",
-        enum: ["discount", "percent"]
+        default: "value",
+        enum: ["value", "percent"]
     },
-    discount: {
+    discountValue: {
         type: Number,
         default: 0,
     },
-    max_discount: {
+    maxDiscount: {
         type: Number,
         default: 0,
     },
-    percent: {
+    discountPercent: {
         type: Number,
         default: 0,
     },
-    start_date: {
+    startDate: {
         type: Date,
     },
-    end_date: {
+    endDate: {
         type: Date,
     },
-    total: {
+    quantity: {
         type: Number,
-        default: 0,
+        default: 10,
     },
     available: {
         type: Number,
-        default: 0,
     },
     used: {
         type: Number,
         default: 0,
     },
-    min_apply: {
+    minOrderValue: {
         type: Number,
         default: 0,
     },

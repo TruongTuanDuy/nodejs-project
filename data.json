@@ -1,1 +1,206 @@
-[{ "id": 2, "name": "item2", "status": "active" }]
+[
+  {
+    "name": "Thành phố Hà Nội",
+    "code": "01",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Cao Bằng",
+    "code": "04",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Tuyên Quang",
+    "code": "08",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Điện Biên",
+    "code": "11",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Lai Châu",
+    "code": "12",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Sơn La",
+    "code": "14",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Lào Cai",
+    "code": "15",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Thái Nguyên",
+    "code": "19",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Lạng Sơn",
+    "code": "20",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Quảng Ninh",
+    "code": "22",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Bắc Ninh",
+    "code": "24",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Phú Thọ",
+    "code": "25",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Thành phố Hải Phòng",
+    "code": "31",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Hưng Yên",
+    "code": "33",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Ninh Bình",
+    "code": "37",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Thanh Hóa",
+    "code": "38",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Nghệ An",
+    "code": "40",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Hà Tĩnh",
+    "code": "42",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Quảng Trị",
+    "code": "44",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Thành phố Huế",
+    "code": "46",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Thành phố Đà Nẵng",
+    "code": "48",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Quảng Ngãi",
+    "code": "51",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Gia Lai",
+    "code": "52",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Khánh Hòa",
+    "code": "56",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Đắk Lắk",
+    "code": "66",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Lâm Đồng",
+    "code": "68",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Đồng Nai",
+    "code": "75",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Thành phố Hồ Chí Minh",
+    "code": "79",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Tây Ninh",
+    "code": "80",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Đồng Tháp",
+    "code": "82",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Vĩnh Long",
+    "code": "86",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "An Giang",
+    "code": "91",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Thành phố Cần Thơ",
+    "code": "92",
+    "status": "active",
+    "fee": "50"
+  },
+  {
+    "name": "Cà Mau",
+    "code": "96",
+    "status": "active",
+    "fee": "50"
+  }
+]

@@ -56,6 +56,10 @@ const productSchema = new Schema({
         ref: 'categories', //phải trùng với tên collection trong category_model.js
         required: true,
     },
+    stock: {
+        type: Number,
+        default: 0,
+    }
 },
     {
         timestamps: true,

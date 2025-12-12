@@ -20,6 +20,11 @@ class UserService {
         };
     };
 
+    getUserByParams = async (params) => {
+        let data = await UserModel.findOne(params);
+        return data;
+    }
+
     getUserById = async (id) => {
         let data = await UserModel.findById(id).populate("group_user");
         return data

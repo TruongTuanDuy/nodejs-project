@@ -19,8 +19,14 @@ class ItemService {
         };
     };
 
+    getItemByParams = async (params) => {
+        let data = await ItemModel.findOne(params)
+        return data
+    };
+
     getItemById = async (id) => {
-        // let data = ItemModel.findById(id).then(data => data)
+        // let data = ItemModel.findById(id).then(data => data).catch() 
+        // không chờ kết quả, mà trả ra promise và thực hiện ngay "then"
         // console.log(data);
 
         // try {

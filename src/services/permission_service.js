@@ -19,7 +19,7 @@ class PermissionService {
         };
     };
 
-    getPermission = async (params) => {
+    getItemByParams = async (params) => {
         let data = await ItemModel.findOne(params)
         return data
     };

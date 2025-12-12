@@ -25,8 +25,8 @@ class CouponService {
         return data
     };
 
-    getCouponByCode = async (code) => {//truyền param chung cho findOne??
-        let data = await CouponModel.findOne({ code: code });
+    getCouponByParams = async (params) => {//truyền params chung cho findOne
+        let data = await CouponModel.findOne(params);
         return data;
     }
 
@@ -37,5 +37,11 @@ class CouponService {
     editCouponById = async (id, obj) => {
         await CouponModel.findByIdAndUpdate(id, obj)
     };
+
+    // $inc  
+    updateCouponInc = async (id) => {
+        await CouponModel.findByIdAndUpdate(id, { $inc: { used: 1, available: -1 } })
+    }
 }
+
 module.exports = new CouponService();

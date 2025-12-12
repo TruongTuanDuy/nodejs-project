@@ -1,30 +1,25 @@
 var { ErrorCustom, BadRequestError, AuthentificationError } = require('../app/core/error_custom');
 const { checkMogooseObjectId } = require('../app/helpers/check');
 let CouponService = require('../services/coupon_service');
-const cloudinary = require('../app/core/init_cloudinary');
-let { deleteImg, deleteMultiImg } = require('../app/helpers/deleteImg');
 
 class CouponController {
 
     addCoupon = async function (req, res, next) {
-        let { code, percent, start_date, end_date, total, used } = req.body;
+        let { code, discountPercent, startDate, endDate, quantity, used } = req.body;
 
-        let coupon = await CouponService.getCouponByCode(code);
+        let coupon = await CouponService.getCouponByParams({ code: code });
         if (coupon) throw new BadRequestError("Coupon đã tồn tại");
 
-        if (percent) {
-            req.body.percent = percent > 100 ? 100 : percent;
+        if (discountPercent) {
+            req.body.discountPercent = discountPercent > 100 ? 100 : discountPercent;
         }
         // format date yyyy-mm-dd
-        let start_date_obj = new Date(start_date);
-        let end_date_obj = new Date(end_date);
-        if (end_date_obj < start_date_obj) {
-            throw new BadRequestError('start_date < end_date');
+        let startDateObj = new Date(startDate);
+        let endDateObj = new Date(endDate);
+        if (endDateObj < startDateObj) {
+            throw new BadRequestError('startDate < endDate');
         }
-        req.body.available = total - used;
-
-
-
+        req.body.available = quantity - used;
 
         await CouponService.addCoupon(req.body);
         res.send({

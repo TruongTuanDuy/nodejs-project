@@ -7,6 +7,9 @@ let { deleteImg, deleteMultiImg } = require('../app/helpers/deleteImg');
 class UserController {
 
     addUser = async function (req, res, next) {//check email tồn tại
+        let user = await UserService.getUserByParams({ email: req.body.email });
+        if (user) throw new BadRequestError("Email đã sử dụng");
+
         await UserService.addUser(req.body);
         res.send({
             message: "add user",

@@ -1,10 +1,11 @@
 //Tạo đối tượng tìm kiếm và sắp xếp từ query
 let handlerFindObj = (query) => {
-    const { price, is_special = false, sortField = 'createdAt', sortDir = "desc", findField = 'name', findValue, status, page = 1, limit = 20 } = query
+    const { userId, price, is_special = false, sortField = 'createdAt', sortDir = "desc", findField = 'name', findValue, status, page = 1, limit = 50 } = query
 
     let findObj = {};
     let sortObj = {};
     const skip = (page - 1) * limit;
+
     if (status == 'active' || status == 'inactive') {
         findObj = {
             ...findObj,
@@ -33,6 +34,10 @@ let handlerFindObj = (query) => {
 
     if (sortField) {
         sortObj[sortField] = sortDir;
+    };
+
+    if (userId) {
+        findObj['userId'] = userId;
     };
     return { findObj, sortObj, skip, page, limit };
 }
