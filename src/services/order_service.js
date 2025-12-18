@@ -1,5 +1,7 @@
 const handlerFindObj = require('../app/helpers/find_obj');
 const OrderModel = require('../models/order_model');
+const crypto = require('crypto');
+
 
 class OrderService {
 
@@ -9,8 +11,6 @@ class OrderService {
 
     getAllOrder = async (query) => {
         const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
-        console.log(findObj);
-
         let count = await OrderModel.find(findObj).countDocuments();
         let data = await OrderModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
         return {
@@ -26,13 +26,16 @@ class OrderService {
         return data
     };
 
-    getOrderByParams = async (code, userId) => {
+    getOrderByCode = async (code, userId) => {
         let data = await OrderModel.findOne({ code: code, userId: userId }).populate('shippingId', 'name').populate('couponId').populate('items.productId');
         return data;
     }
 
-    editOrderByParams = async (code, userId) => {
-        await OrderModel.findByIdAndUpdate(id, obj)
+    getOrderByTokenCode = async (token, code) => {
+        let data = await OrderModel.findOne({ cancelToken: token, code: code });
+        console.log(data);
+
+        return data;
     }
 
     deleteOrderById = async (id) => {
@@ -42,5 +45,21 @@ class OrderService {
     editOrderById = async (id, obj) => {
         await OrderModel.findByIdAndUpdate(id, obj)
     };
+
+    generateCancelToken = async (order) => {
+        const token = crypto.randomInt(100000, 999999).toString();
+        const tokenExpire = Date.now() + 1000 * 60 * 60; // 10 minutes
+        await OrderModel.findByIdAndUpdate(order._id, { cancelToken: token, cancelTokenExpire: tokenExpire });
+        return token;
+    };
+
+    cancelOrder = async (order) => {
+        order.status = "cancelled";
+        order.cancelToken = '';
+        order.cancelTokenExpire = '';
+        await order.save();
+        return order;
+    }
+
 }
 module.exports = new OrderService();

@@ -49,8 +49,6 @@ class AuthController {
         res.send({
             message: "Kiểm tra email để nhận mã xác thực",
         });
-
-
     };
 
     resetPassword = async function (req, res, next) {

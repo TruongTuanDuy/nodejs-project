@@ -16,7 +16,7 @@ const orderSchema = new Schema({
     status: {
         type: String,
         default: "confirmed",
-        enum: ["complete", "shipping", "confirmed", "canceled"]
+        enum: ["complete", "shipping", "confirmed", "cancelled"]
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,

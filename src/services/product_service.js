@@ -33,5 +33,10 @@ class ProductService {
     editProductById = async (id, obj) => {
         await ProductModel.findByIdAndUpdate(id, obj)
     };
+
+    // Chưa kịp làm hàm này
+    updateProductStock = async (id) => {
+        await ProductModel.findByIdAndUpdate(id, { $inc: { stock: -1 } })
+    }
 }
 module.exports = new ProductService();

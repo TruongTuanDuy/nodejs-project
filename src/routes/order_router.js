@@ -6,14 +6,14 @@ const OrderController = require('../controllers/order_controller');
 
 /* GET home page. */
 router.use(checkLogin);
-router.get('/', asyncHandler(OrderController.getAllOrder));
-router.get('/history', asyncHandler(OrderController.getHistoryOrder));
+router.get('/history', asyncHandler(OrderController.getOrderHistory));
 router.get('/history/:code', asyncHandler(OrderController.getOrderByCode));
-router.get('/cancel/:code', asyncHandler(OrderController.cancelOrderByCode));
+router.post('/token/:code', asyncHandler(OrderController.generateCancelToken));
+router.put('/cancel/:code', asyncHandler(OrderController.cancelOrder));
+
+router.get('/', asyncHandler(OrderController.getAllOrder));
 router.get('/:id', asyncHandler(OrderController.getOrderById));
-
-
-router.post('/', asyncHandler(OrderController.addOrder));
+// router.post('/', asyncHandler(OrderController.addOrder));
 router.delete('/:id', asyncHandler(OrderController.deleteOrderById));
 router.put('/:id', asyncHandler(OrderController.editOrderById));
 

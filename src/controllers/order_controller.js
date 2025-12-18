@@ -87,6 +87,7 @@ class OrderController {
         req.body.code = 'ORD' + Date.now(); //thêm userID
         await OrderService.addOrder(req.body);
         await CouponService.updateCouponInc(couponId);
+        // await ProductService.updateProductStock(items); // chưa kịp làm
 
         let user = await UserService.getUserById(req.userId);
         console.log(user.email);
@@ -118,7 +119,6 @@ class OrderController {
         });
     };
 
-
     deleteOrderById = async function (req, res, next) {
         let id = req.params.id;
         const data = await OrderService.getOrderById(id);
@@ -142,7 +142,7 @@ class OrderController {
         });
     }
 
-    getHistoryOrder = async function (req, res, next) {
+    getOrderHistory = async function (req, res, next) {
         const data = await OrderService.getAllOrder({ ...req.query, userId: req.userId });
         res.send({
             message: "get history order",
@@ -151,7 +151,7 @@ class OrderController {
     }
 
     getOrderByCode = async function (req, res, next) {
-        const data = await OrderService.getOrderByParams(req.params.code, req.userId);
+        const data = await OrderService.getOrderByCode(req.params.code, req.userId);
         if (!data) throw new BadRequestError('Mã đơn hàng không tồn tại');
         res.send({
             message: "get order status",
@@ -159,18 +159,35 @@ class OrderController {
         });
     }
 
-    cancelOrderByCode = async function (req, res, next) {
-        const data = await OrderService.getOrderByParams(req.params.code, req.userId);
-        if (!data) throw new BadRequestError('Mã đơn hàng không tồn tại');
+    generateCancelToken = async function (req, res, next) {
 
-        await OrderService.editOrderById(id, obj);
+        const order = await OrderService.getOrderByCode(req.params.code, req.userId);
+        if (!order) throw new BadRequestError('Mã đơn hàng không tồn tại');
+
+        const token = await OrderService.generateCancelToken(order);
+        let user = await UserService.getUserById(req.userId);
+
+        sendMail(user.email, "Cancel Order Token", `Mã xác thực để hủy đơn hàng ${req.params.code} của bạn là: ${token}`);
 
         res.send({
-            message: "cancel order",
-            data
+            message: "Kiểm tra email để nhận mã xác thực",
         });
+    };
 
-    }
+    cancelOrder = async function (req, res, next) {
+        const { token } = req.body;
+
+        let order = await OrderService.getOrderByTokenCode(token, req.params.code);
+        if (!order) throw new BadRequestError("Đơn hàng không hợp lệ");
+
+        if (Date.now() > order.cancelTokenExpire) throw new BadRequestError("Mã xác thực đã hết hạn");
+
+        await OrderService.cancelOrder(order);
+
+        res.send({
+            message: "Hủy đơn hàng thành công",
+        });
+    };
 
 }
 
