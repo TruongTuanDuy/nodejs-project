@@ -39,8 +39,8 @@ class CouponService {
     };
 
     // $inc  
-    updateCouponInc = async (id) => {
-        await CouponModel.findByIdAndUpdate(id, { $inc: { used: 1, available: -1 } })
+    updateCouponInc = async (id, { used = 1, available = -1 }) => {
+        await CouponModel.findByIdAndUpdate(id, { $inc: { used: used, available: available } })
     }
 }
 

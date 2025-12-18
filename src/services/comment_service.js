@@ -1,0 +1,86 @@
+const handlerFindObj = require('../app/helpers/find_obj');
+const CommentModel = require('../models/comment_model');
+
+class CommentService {
+
+    addComment = async (data, userId) => {
+        const { content, productId, commentId = null } = data;
+        let newComment = new CommentModel({
+            userId: userId,
+            productId: productId,
+            commentId: commentId,
+            content: content
+        });
+
+        if (commentId) {
+            let parentComment = await CommentModel.findById(commentId);
+            if (!parentComment) throw new Error('không tìm thấy comment cha');
+            newComment.left = parentComment.right;
+            newComment.right = parentComment.right + 1;
+            await CommentModel.updateMany(
+                { productId: productId, right: { $gte: parentComment.right } },
+                { $inc: { right: 2 } }
+            );
+            await CommentModel.updateMany(
+                { productId: productId, left: { $gt: parentComment.right } },
+                { $inc: { left: 2 } }
+            );
+        } else {
+            let comment = await CommentModel.findOne({ productId: productId, commentId: null }).sort({ right: -1 });
+            if (comment) {
+                newComment.left = comment.right + 1;
+                newComment.right = comment.right + 2;
+            }
+            else {
+                newComment.left = 1;
+                newComment.right = 2;
+            }
+
+        }
+
+        newComment.save()
+        // await CommentModel.create(data)
+
+    };
+
+    getAllComment = async (query) => {
+        const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
+        let count = await CommentModel.find(findObj).countDocuments();
+        let data = await CommentModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
+        return {
+            page,
+            limit,
+            total: count,
+            data,
+        };
+    };
+
+    getCommentByParams = async (params) => {
+        let data = await CommentModel.findOne(params)
+        return data
+    };
+
+    getCommentById = async (id) => {
+        let data = await CommentModel.findById(id)
+        return data
+    };
+
+    getCommentByCommentId = async (data) => {
+        let comment = await CommentModel.find({
+            productId: data.productId,
+            left: { $gt: data.left },
+            right: { $lt: data.right }
+        });
+        return comment
+    };
+
+    deleteCommentById = async (id) => {
+        await CommentModel.findByIdAndDelete(id)
+    };
+
+    editCommentById = async (id, obj) => {
+        await CommentModel.findByIdAndUpdate(id, obj)
+    };
+
+}
+module.exports = new CommentService();
