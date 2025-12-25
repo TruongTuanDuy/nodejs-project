@@ -14,7 +14,7 @@ class CommentService {
 
         if (commentId) {
             let parentComment = await CommentModel.findById(commentId);
-            if (!parentComment) throw new Error('không tìm thấy comment cha');
+            if (!parentComment) throw new Error('không tìm thấy comment');
             newComment.left = parentComment.right;
             newComment.right = parentComment.right + 1;
             await CommentModel.updateMany(
@@ -35,12 +35,9 @@ class CommentService {
                 newComment.left = 1;
                 newComment.right = 2;
             }
-
         }
-
         newComment.save()
         // await CommentModel.create(data)
-
     };
 
     getAllComment = async (query) => {
@@ -65,17 +62,33 @@ class CommentService {
         return data
     };
 
-    getCommentByCommentId = async (data) => {
-        let comment = await CommentModel.find({
-            productId: data.productId,
-            left: { $gt: data.left },
-            right: { $lt: data.right }
+    getReplyByCommentId = async (comment) => {
+        let reply = await CommentModel.find({
+            productId: comment.productId,
+            left: { $gt: comment.left },
+            right: { $lt: comment.right }
         });
-        return comment
+        return reply
     };
 
-    deleteCommentById = async (id) => {
-        await CommentModel.findByIdAndDelete(id)
+    deleteCommentById = async (comment) => {
+        const left = comment.left;
+        const right = comment.right;
+        const width = right - left + 1;
+
+        await CommentModel.deleteMany({
+            productId: comment.productId,
+            left: { $gte: left },
+            right: { $lte: right }
+        });
+        await CommentModel.updateMany(
+            { productId: comment.productId, left: { $gt: left } },
+            { $inc: { left: -width } }
+        );
+        await CommentModel.updateMany(
+            { productId: comment.productId, right: { $gt: right } },
+            { $inc: { right: -width } }
+        );
     };
 
     editCommentById = async (id, obj) => {

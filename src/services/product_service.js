@@ -34,9 +34,12 @@ class ProductService {
         await ProductModel.findByIdAndUpdate(id, obj)
     };
 
-    // Chưa kịp làm hàm này
-    updateProductStock = async (id) => {
-        await ProductModel.findByIdAndUpdate(id, { $inc: { stock: -1 } })
+    //còn lủng củng chỗ này
+    updateProductStock = async (items, increase = false) => {
+        for (let index = 0; index < items.length; index++) {
+            const element = items[index];
+            await ProductModel.findByIdAndUpdate(element.productId, { $inc: { stock: increase ? element.quantity : -element.quantity } })
+        }
     }
 }
 module.exports = new ProductService();

@@ -19,8 +19,9 @@ const commentSchema = new Schema({
     content: {
         type: String,
     },
-    like: {
+    likeCount: {
         type: Number,
+        default: 0
     },
     left: {
         type: Number,

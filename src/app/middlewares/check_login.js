@@ -12,7 +12,7 @@ function checkLogin(req, res, next) {
     let token = req.headers.authorization.split(' ')[1];
     try {
         var decoded = jwt.verify(token, 'duy');
-        console.log(decoded)
+        console.log(decoded);
         req.userId = decoded.userId;
         next();
 

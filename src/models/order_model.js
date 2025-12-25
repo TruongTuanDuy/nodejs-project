@@ -47,6 +47,10 @@ const orderSchema = new Schema({
             quantity: Number
         }]
     ,
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
 
     cancelToken: { type: String },
     cancelTokenExpire: { type: Number },

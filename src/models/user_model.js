@@ -63,6 +63,7 @@ userSchema.pre('save', function (next) {
 
 })
 
+
 // userSchema.add({
 //     resetToken: { type: String },
 //     resetTokenExpire: { type: Number },

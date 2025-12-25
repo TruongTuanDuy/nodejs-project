@@ -1,3 +1,4 @@
+const { log } = require('console');
 const handlerFindObj = require('../app/helpers/find_obj');
 const OrderModel = require('../models/order_model');
 const crypto = require('crypto');
@@ -22,6 +23,8 @@ class OrderService {
     };
 
     getOrderById = async (id) => {
+        console.log(123);
+
         let data = await OrderModel.findById(id)
         return data
     };
@@ -33,13 +36,12 @@ class OrderService {
 
     getOrderByTokenCode = async (token, code) => {
         let data = await OrderModel.findOne({ cancelToken: token, code: code });
-        console.log(data);
 
         return data;
     }
 
     deleteOrderById = async (id) => {
-        await OrderModel.findByIdAndDelete(id)
+        await OrderModel.findByIdAndUpdate(id, { isDeleted: true })
     };
 
     editOrderById = async (id, obj) => {

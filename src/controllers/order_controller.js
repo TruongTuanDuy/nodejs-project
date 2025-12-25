@@ -84,14 +84,13 @@ class OrderController {
             throw new BadRequestError('giá trị đơn hàng không đúng');
         }
 
-        req.body.code = 'ORD' + Date.now(); //thêm userID
+        req.body.code = 'ORD' + Date.now(); //nên thêm userID trong code
+
         await OrderService.addOrder(req.body);
-        await CouponService.updateCouponInc(couponId);
-        // await ProductService.updateProductStock(items); // chưa kịp làm
+        await CouponService.updateCouponInc(couponId, {});
+        await ProductService.updateProductStock(items);
 
         let user = await UserService.getUserById(req.userId);
-        console.log(user.email);
-
         sendMail(user.email, "Order Confirmation", `Mã đơn hàng của bạn là: ${req.body.code}`);
 
         res.send({
@@ -131,7 +130,7 @@ class OrderController {
 
     editOrderById = async function (req, res, next) {
         let id = req.params.id;
-        let obj = req.body;
+        let obj = req.body.status ? { status: req.body.status } : {};
         const data = await OrderService.getOrderById(id);
         if (!data) throw new Error('id không tìm thấy');
 
@@ -167,6 +166,8 @@ class OrderController {
         const token = await OrderService.generateCancelToken(order);
         let user = await UserService.getUserById(req.userId);
 
+        console.log(token);
+
         sendMail(user.email, "Cancel Order Token", `Mã xác thực để hủy đơn hàng ${req.params.code} của bạn là: ${token}`);
 
         res.send({
@@ -179,10 +180,13 @@ class OrderController {
 
         let order = await OrderService.getOrderByTokenCode(token, req.params.code);
         if (!order) throw new BadRequestError("Đơn hàng không hợp lệ");
+        if (order.status !== "confirmed") throw new BadRequestError("Đơn hàng không thể hủy");
 
         if (Date.now() > order.cancelTokenExpire) throw new BadRequestError("Mã xác thực đã hết hạn");
 
         await OrderService.cancelOrder(order);
+        await CouponService.updateCouponInc(order.couponId, { used: -1, available: 1 });
+        await ProductService.updateProductStock(order.items, true); //lủng củng chỗ này
 
         res.send({
             message: "Hủy đơn hàng thành công",

@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const permissionService = require('../../services/permission_service');
 const user_service = require('../../services/user_service');
 
@@ -16,5 +15,6 @@ async function checkPermission(req, res, next) {
             message: "Not permission",
         });
     }
+
 };
 module.exports = { checkPermission };
