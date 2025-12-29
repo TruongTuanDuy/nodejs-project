@@ -70,4 +70,6 @@ productSchema.pre('save', function (next) {
     next();
 })
 
+productSchema.index({ name: 'text' });
+
 module.exports = model('products', productSchema);

@@ -15,9 +15,8 @@ class CommentController {
     getCommentByProductId = async function (req, res, next) {
         console.log(req.params.id);
 
-        req.query.productId = req.params.id;
         console.log(req.query);
-        const data = await CommentService.getAllComment(req.query);
+        const data = await CommentService.getAllComment({ ...req.query, productId: req.params.id });
         res.send({
             message: "get all comment by product id",
             data
@@ -70,12 +69,12 @@ class CommentController {
 
     editCommentById = async function (req, res, next) {
         let id = req.params.id;
-        let obj = req.body.content ? { content: req.body.content } : {};
+        let { content } = req.body
 
         const data = await CommentService.getCommentByParams({ _id: id, userId: req.userId });
         if (!data) throw new Error('id không tìm thấy');
 
-        await CommentService.editCommentById(id, obj);
+        await CommentService.editCommentById(id, { content });
 
         res.send({
             message: "edit comment"

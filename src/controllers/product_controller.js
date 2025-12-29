@@ -3,6 +3,7 @@ const { checkMogooseObjectId } = require('../app/helpers/check');
 let ProductService = require('../services/product_service');
 const cloudinary = require('../app/core/init_cloudinary');
 let { deleteImg, deleteMultiImg } = require('../app/helpers/deleteImg');
+const redisClient = require('../app/core/init_redis');
 
 class ProductController {
 
@@ -23,7 +24,21 @@ class ProductController {
     }
 
     getAllProduct = async function (req, res, next) {
+        const { page, limit } = req.query;
+        //kiểm tra trong redis trước
+        const cachedData = await redisClient.get(`all_products:${page}:${limit}`);
+        if (cachedData) {
+            res.send({
+                message: "get all product",
+                data: JSON.parse(cachedData)
+            });
+            return;
+        }
+
         const data = await ProductService.getAllProduct(req.query);
+        //lưu vào redis ở đây
+        redisClient.set(`all_products:${page}:${limit}`, JSON.stringify(data), { EX: 3600 }); // Lưu trữ trong 1 giờ (3600 giây)
+
         res.send({
             message: "get all product",
             data

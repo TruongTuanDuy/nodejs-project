@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const { error, log } = require('console');
 
 require('./src/app/core/init_db');
+require('./src/app/core/init_redis');
 
 var app = express();
 
