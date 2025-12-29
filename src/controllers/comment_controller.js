@@ -81,6 +81,13 @@ class CommentController {
         });
     }
 
+    likeComment = async function (req, res, next) {
+        await CommentService.likeComment(req.userId, req.params.id);
+
+        res.send({
+            message: "like comment"
+        });
+    }
 }
 
 module.exports = new CommentController()

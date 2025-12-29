@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const likeSchema = new Schema({
+const likeCommentSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -16,4 +16,4 @@ const likeSchema = new Schema({
         timestamps: true,
     });
 
-module.exports = model('likes', likeSchema);
+module.exports = model('like-comments', likeCommentSchema);

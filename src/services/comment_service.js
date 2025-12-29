@@ -1,5 +1,6 @@
 const handlerFindObj = require('../app/helpers/find_obj');
 const CommentModel = require('../models/comment_model');
+const LikeCommentModel = require('../models/like_comment_model');
 
 class CommentService {
 
@@ -93,6 +94,18 @@ class CommentService {
 
     editCommentById = async (id, obj) => {
         await CommentModel.findByIdAndUpdate(id, obj)
+    };
+
+    likeComment = async (userId, commentId) => {
+        const like = await LikeCommentModel.findOne({ userId, commentId });
+        console.log(like);
+        if (like) {
+            await LikeCommentModel.findByIdAndDelete(like._id);
+            await CommentModel.findByIdAndUpdate(commentId, { $inc: { likeCount: -1 } });
+        } else {
+            await LikeCommentModel.create({ userId, commentId });
+            await CommentModel.findByIdAndUpdate(commentId, { $inc: { likeCount: 1 } });
+        }
     };
 
 }

@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-router.use('/like', require('./like_router'));
 router.use('/comment', require('./comment_router'));
 router.use('/item', require('./item_router'));
 router.use('/category', require('./category_router'));

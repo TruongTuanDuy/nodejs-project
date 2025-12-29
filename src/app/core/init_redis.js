@@ -1,5 +1,3 @@
-
-
 //Khởi tạo kết nối đến Redis
 const redis = require('redis');
 
@@ -14,6 +12,5 @@ redisClient.connect()
     .catch((err) => {
         console.error('Could not connect to Redis', err);
     });
-
 
 module.exports = redisClient;
