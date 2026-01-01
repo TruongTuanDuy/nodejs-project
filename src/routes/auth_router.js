@@ -11,10 +11,11 @@ router.post('/login', asyncHandler(AuthController.login));
 router.post('/forgot-password', asyncHandler(AuthController.forgotPassword));
 router.put('/reset-password', asyncHandler(AuthController.resetPassword));
 
-router.use(checkLogin);
+//qua user router để checkLogin
+// router.use(checkLogin);
 
-router.get('/me', asyncHandler(AuthController.getMe));//info
-router.put('/me', asyncHandler(AuthController.editMe));
-router.put('/change-password', asyncHandler(AuthController.changePassword));
+// router.get('/me', asyncHandler(AuthController.getMe));//info
+// router.put('/me', asyncHandler(AuthController.editMe));
+// router.put('/change-password', asyncHandler(AuthController.changePassword));
 
 module.exports = router;
