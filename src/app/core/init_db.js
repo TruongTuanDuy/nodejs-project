@@ -7,7 +7,9 @@ class InitDB {
     }
 
     start = () => {
-        mongoose.connect('mongodb+srv://project-nodejs:11111118@cluster0.dy2u4tv.mongodb.net/shop');
+        console.log(process.env.MB_USERNAME);
+
+        mongoose.connect(`mongodb+srv://${process.env.MB_USERNAME}:${process.env.MB_PASSWORD}@cluster0.dy2u4tv.mongodb.net/${process.env.MB_DBNAME}`);
         mongoose.connection
             .once('open', function () {
                 console.log('MongoDB running');

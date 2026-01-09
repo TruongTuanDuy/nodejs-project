@@ -7,6 +7,7 @@ class PermissionController {
     getAllItem = async function (req, res, next) {
         const data = await ItemService.getAllItem(req.query);
         res.send({
+            ok: true,
             message: "get all item",
             data
         });
@@ -19,6 +20,7 @@ class PermissionController {
         const data = await ItemService.getItemById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one item",
             data
         });
@@ -27,6 +29,7 @@ class PermissionController {
     addItem = async function (req, res, next) {
         await ItemService.addItem(req.body);
         res.send({
+            ok: true,
             message: "add item",
         });
     }
@@ -37,6 +40,7 @@ class PermissionController {
         if (!data) throw new BadRequestError('id không tìm thấy');
         await ItemService.deleteItemById(id);
         res.send({
+            ok: true,
             message: "delete item"
         });
     }
@@ -50,6 +54,7 @@ class PermissionController {
         await ItemService.editItemById(id, obj);
 
         res.send({
+            ok: true,
             message: "edit item"
         });
     }

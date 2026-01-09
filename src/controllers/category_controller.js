@@ -7,15 +7,20 @@ let { deleteImg, deleteMultiImg } = require('../app/helpers/deleteImg');
 class CategoryController {
 
     addCategory = async function (req, res, next) {
-        await CategoryService.addCategory(req.body);
+        let data = await CategoryService.addCategory(req.body);
         res.send({
+            ok: true,
             message: "add category",
+            data: {
+                id: data._id
+            }
         });
     };
 
     getAllCategory = async function (req, res, next) {
         const data = await CategoryService.getAllCategory(req.query);
         res.send({
+            ok: true,
             message: "get all category",
             data
         });
@@ -28,6 +33,7 @@ class CategoryController {
         const data = await CategoryService.getCategoryById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one category",
             data
         });
@@ -40,6 +46,7 @@ class CategoryController {
         const data = await CategoryService.getProductByCategory(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get product by category",
             data
         });
@@ -53,6 +60,7 @@ class CategoryController {
         if (!data) throw new BadRequestError('id không tìm thấy');
         await CategoryService.deleteCategoryById(id);
         res.send({
+            ok: true,
             message: "delete category"
         });
     }
@@ -66,6 +74,7 @@ class CategoryController {
         await CategoryService.editCategoryById(id, obj);
 
         res.send({
+            ok: true,
             message: "edit category"
         });
     }
@@ -120,6 +129,7 @@ class CategoryController {
         CategoryService.editCategoryById(id, { images: url });
 
         res.send({
+            ok: true,
             message: "upload image category"
         });
     }
@@ -157,6 +167,7 @@ class CategoryController {
             })
 
         res.send({
+            ok: true,
             message: "upload image category"
         });
     }

@@ -12,6 +12,7 @@ class UserController {
 
         await UserService.addUser(req.body);
         res.send({
+            ok: true,
             message: "add user",
         });
     };
@@ -19,6 +20,7 @@ class UserController {
     getAllUser = async function (req, res, next) {
         const data = await UserService.getAllUser(req.query);
         res.send({
+            ok: true,
             message: "get all user",
             data
         });
@@ -31,6 +33,7 @@ class UserController {
         const data = await UserService.getUserById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one user",
             data
         });
@@ -46,6 +49,7 @@ class UserController {
         await UserService.editUserById(id, obj);
 
         res.send({
+            ok: true,
             message: "edit user"
         });
     };
@@ -59,6 +63,7 @@ class UserController {
         await UserService.deleteUserById(id);
 
         res.send({
+            ok: true,
             message: "delete user"
         });
     };
@@ -92,6 +97,7 @@ class UserController {
             })
 
         res.send({
+            ok: true,
             message: "upload image user"
         });
     };
@@ -128,6 +134,7 @@ class UserController {
         UserService.editUserById(id, { images: url });
 
         res.send({
+            ok: true,
             message: "upload image user"
         });
     };

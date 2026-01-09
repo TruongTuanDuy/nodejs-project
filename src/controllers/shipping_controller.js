@@ -12,6 +12,7 @@ class ShippingController {
 
         await ShippingService.addShipping(req.body);
         res.send({
+            ok: true,
             message: "add shipping",
         });
     }
@@ -19,6 +20,7 @@ class ShippingController {
     getAllShipping = async function (req, res, next) {
         const data = await ShippingService.getAllShipping(req.query);
         res.send({
+            ok: true,
             message: "get all shipping",
             data
         });
@@ -31,6 +33,7 @@ class ShippingController {
         const data = await ShippingService.getShippingById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one shipping",
             data
         });
@@ -43,6 +46,7 @@ class ShippingController {
         if (!data) throw new BadRequestError('id không tìm thấy');
         await ShippingService.deleteShippingById(id);
         res.send({
+            ok: true,
             message: "delete shipping"
         });
     }
@@ -56,6 +60,7 @@ class ShippingController {
         await ShippingService.editShippingById(id, obj);
 
         res.send({
+            ok: true,
             message: "edit shipping"
         });
     }

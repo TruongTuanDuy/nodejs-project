@@ -10,6 +10,7 @@ class ItemController {
         console.log(req.query);
         const data = await ItemService.getAllItem(req.query);
         res.send({
+            ok: true,
             message: "get all item",
             data
         });
@@ -26,6 +27,7 @@ class ItemController {
         const data = await ItemService.getItemById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one item",
             data
         });
@@ -42,6 +44,7 @@ class ItemController {
 
         await ItemService.addItem(req.body);
         res.send({
+            ok: true,
             message: "add item",
         });
     }
@@ -58,6 +61,7 @@ class ItemController {
         if (!data) throw new BadRequestError('id không tìm thấy');
         await ItemService.deleteItemById(id);
         res.send({
+            ok: true,
             message: "delete item"
         });
     }
@@ -81,6 +85,7 @@ class ItemController {
         await ItemService.editItemById(id, obj);
 
         res.send({
+            ok: true,
             message: "edit item"
         });
     }

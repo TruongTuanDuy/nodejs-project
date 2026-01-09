@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('project-nodejs:server');
 var http = require('http');
+const { Server } = require("socket.io");
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +21,22 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+const io = new Server(server);
+
+
+
+io.on("connection", (socket) => {
+  console.log("User connected : " + socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected : " + socket.id);
+  });
+});
+
+global.__io = io;//global variable  
+
+
+
 
 /**
  * Listen on provided port, on all network interfaces.

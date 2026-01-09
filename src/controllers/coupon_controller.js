@@ -23,6 +23,7 @@ class CouponController {
 
         await CouponService.addCoupon(req.body);
         res.send({
+            ok: true,
             message: "add coupon",
         });
     }
@@ -30,6 +31,7 @@ class CouponController {
     getAllCoupon = async function (req, res, next) {
         const data = await CouponService.getAllCoupon(req.query);
         res.send({
+            ok: true,
             message: "get all coupon",
             data
         });
@@ -42,6 +44,7 @@ class CouponController {
         const data = await CouponService.getCouponById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one coupon",
             data
         });
@@ -54,6 +57,7 @@ class CouponController {
         if (!data) throw new BadRequestError('id không tìm thấy');
         await CouponService.deleteCouponById(id);
         res.send({
+            ok: true,
             message: "delete coupon"
         });
     }
@@ -67,6 +71,7 @@ class CouponController {
         await CouponService.editCouponById(id, obj);
 
         res.send({
+            ok: true,
             message: "edit coupon"
         });
     }

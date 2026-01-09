@@ -22,7 +22,7 @@ class ProductService {
 
     getProductById = async (id) => {
         let data = await ProductModel.findById(id)
-            .populate('category', 'name slug');//
+            .populate('category', 'name slug');// lấy ra 2 trường name và slug của category
         return data
     };
 

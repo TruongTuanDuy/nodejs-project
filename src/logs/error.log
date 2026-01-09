@@ -1,1 +1,7 @@
 {"level":"error","message":"POST /product1 - Not Found-Mon Dec 29 2025 14:49:56 GMT+0700 (Indochina Time)"}
+{"level":"error","message":"GET /categor1y?status=active - Not Found-Thu Jan 08 2026 13:46:03 GMT+0700 (Indochina Time)"}
+{"level":"error","message":"GET /categor1y?status=active - Not Found-Thu Jan 08 2026 13:47:37 GMT+0700 (Indochina Time)"}
+{"level":"error","message":"POST /login1 - Not Found-Thu Jan 08 2026 13:51:10 GMT+0700 (Indochina Time)"}
+{"level":"error","message":"POST /category - E11000 duplicate key error collection: shop.categories index: slug_1 dup key: { slug: \"cat12-abcd-123\" }-Thu Jan 08 2026 14:19:30 GMT+0700 (Indochina Time)"}
+{"level":"error","message":"POST /category - E11000 duplicate key error collection: shop.categories index: slug_1 dup key: { slug: \"cat12-abcd-124\" }-Thu Jan 08 2026 14:27:05 GMT+0700 (Indochina Time)"}
+{"level":"error","message":"POST /chat?message=hello - Not Found-Thu Jan 08 2026 14:54:40 GMT+0700 (Indochina Time)"}

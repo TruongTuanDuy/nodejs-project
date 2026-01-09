@@ -19,6 +19,7 @@ class ProductController {
 
         await ProductService.add(req.body);
         res.send({
+            ok: true,
             message: "add product",
         });
     }
@@ -40,6 +41,7 @@ class ProductController {
         redisClient.set(`all_products:${page}:${limit}`, JSON.stringify(data), { EX: 3600 }); // Lưu trữ trong 1 giờ (3600 giây)
 
         res.send({
+            ok: true,
             message: "get all product",
             data
         });
@@ -52,6 +54,7 @@ class ProductController {
         const data = await ProductService.getProductById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one product",
             data
         });
@@ -64,6 +67,7 @@ class ProductController {
         if (!data) throw new BadRequestError('id không tìm thấy');
         await ProductService.deleteProductById(id);
         res.send({
+            ok: true,
             message: "delete product"
         });
     }
@@ -89,6 +93,7 @@ class ProductController {
         await ProductService.editProductById(id, obj);
 
         res.send({
+            ok: true,
             message: "edit product"
         });
     }
@@ -126,6 +131,7 @@ class ProductController {
         ProductService.editProductById(id, { images: url });
 
         res.send({
+            ok: true,
             message: "upload image product"
         });
     }
@@ -160,6 +166,7 @@ class ProductController {
             })
 
         res.send({
+            ok: true,
             message: "upload image product"
         });
     }

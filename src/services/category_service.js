@@ -5,14 +5,17 @@ const ProductModel = require('../models/product_model');
 class CategoryService {
 
     addCategory = async (data) => {
-        await CategoryModel.create(data)
+        return await CategoryModel.create(data)
     };
 
     getAllCategory = async (query) => {
         const { findObj, sortObj, skip, page, limit } = handlerFindObj(query);
 
-        let count = await CategoryModel.find(findObj).countDocuments();
-        let data = await CategoryModel.find(findObj).sort(sortObj).skip(skip).limit(limit);
+        let [data, count] = await Promise.all([
+            CategoryModel.find(findObj).sort(sortObj).skip(skip).limit(limit),
+            CategoryModel.find(findObj).countDocuments()
+        ])
+
         return {
             page,
             limit,

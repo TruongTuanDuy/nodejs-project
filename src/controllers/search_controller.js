@@ -21,6 +21,7 @@ class SearchController {
 
         // const data = await SearchService.search(req.query); //Ko nên xài SearchService
         res.send({
+            ok: true,
             message: "search global",
             data: type ? { [type]: resolve[type] } : resolve
         });

@@ -7,6 +7,7 @@ class CommentController {
     getAllComment = async function (req, res, next) {
         const data = await CommentService.getAllComment(req.query);
         res.send({
+            ok: true,
             message: "get all comment",
             data
         });
@@ -18,6 +19,7 @@ class CommentController {
         console.log(req.query);
         const data = await CommentService.getAllComment({ ...req.query, productId: req.params.id });
         res.send({
+            ok: true,
             message: "get all comment by product id",
             data
         });
@@ -31,6 +33,7 @@ class CommentController {
         if (!comment) throw new Error('không tìm thấy id');
         const reply = await CommentService.getReplyByCommentId(comment);
         res.send({
+            ok: true,
             message: "get reply comment",
             reply
         });
@@ -44,6 +47,7 @@ class CommentController {
         const data = await CommentService.getCommentById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one comment",
             data
         });
@@ -52,6 +56,7 @@ class CommentController {
     addComment = async function (req, res, next) {
         await CommentService.addComment(req.body, req.userId);
         res.send({
+            ok: true,
             message: "add comment",
         });
     }
@@ -63,6 +68,7 @@ class CommentController {
 
         await CommentService.deleteCommentById(comment);
         res.send({
+            ok: true,
             message: "delete comment"
         });
     }
@@ -77,6 +83,7 @@ class CommentController {
         await CommentService.editCommentById(id, { content });
 
         res.send({
+            ok: true,
             message: "edit comment"
         });
     }
@@ -85,6 +92,7 @@ class CommentController {
         await CommentService.likeComment(req.userId, req.params.id);
 
         res.send({
+            ok: true,
             message: "like comment"
         });
     }

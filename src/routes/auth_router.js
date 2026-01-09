@@ -6,6 +6,9 @@ const AuthController = require('../controllers/auth_controller');
 const { checkLogin } = require('../app/middlewares/check_login');
 
 /* GET home page. */
+router.get("/chat", (req, res) => {
+    __io.emit('A', req.query.message);
+});
 router.post('/register', asyncHandler(AuthController.register));
 router.post('/login', asyncHandler(AuthController.login));
 router.post('/forgot-password', asyncHandler(AuthController.forgotPassword));

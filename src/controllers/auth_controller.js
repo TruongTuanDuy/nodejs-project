@@ -14,6 +14,7 @@ class AuthController {
 
         await UserService.addUser({ email, password });
         res.send({
+            ok: true,
             message: "register",
         });
     };
@@ -29,7 +30,15 @@ class AuthController {
 
         var token = jwt.sign({ userId: user.id }, 'duy', { expiresIn: '1d' });
 
+        // save cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS trong môi trường production
+            maxAge: 24 * 60 * 60 * 1000 // 1 ngày
+        });
+
         res.send({
+            ok: true,
             message: "login",
             token
         });
@@ -47,6 +56,7 @@ class AuthController {
         sendMail(email, "Reset Password Token", `Mã xác thực của bạn là: ${token}`);
 
         res.send({
+            ok: true,
             message: "Kiểm tra email để nhận mã xác thực",
         });
     };
@@ -62,6 +72,7 @@ class AuthController {
         await UserService.resetPassword(user, newPassword);
 
         res.send({
+            ok: true,
             message: "Đặt lại mật khẩu thành công",
         });
     };
@@ -79,6 +90,7 @@ class AuthController {
         await UserService.changePassword(user, newPassword);
 
         res.send({
+            ok: true,
             message: "Đổi mật khẩu thành công",
         });
     };
@@ -87,6 +99,7 @@ class AuthController {
         const data = await UserService.getUserById(req.userId);
         if (!data) throw new Error('không tìm thấy dữ liệu của bạn');
         res.send({
+            ok: true,
             message: "get Me",
             data
         });
@@ -106,6 +119,7 @@ class AuthController {
 
         await UserService.editMe(id, req.body);
         res.send({
+            ok: true,
             message: "edit Me",
         });
     };

@@ -94,6 +94,7 @@ class OrderController {
         sendMail(user.email, "Order Confirmation", `Mã đơn hàng của bạn là: ${req.body.code}`);
 
         res.send({
+            ok: true,
             message: "add order",
         });
     }
@@ -101,6 +102,7 @@ class OrderController {
     getAllOrder = async function (req, res, next) {
         const data = await OrderService.getAllOrder(req.query);
         res.send({
+            ok: true,
             message: "get all order",
             data
         });
@@ -113,6 +115,7 @@ class OrderController {
         const data = await OrderService.getOrderById(id);
         if (!data) throw new Error('không tìm thấy id');
         res.send({
+            ok: true,
             message: "get one order",
             data
         });
@@ -124,6 +127,7 @@ class OrderController {
         if (!data) throw new BadRequestError('id không tìm thấy');
         await OrderService.deleteOrderById(id);
         res.send({
+            ok: true,
             message: "delete order"
         });
     }
@@ -137,6 +141,7 @@ class OrderController {
         await OrderService.editOrderById(id, obj);
 
         res.send({
+            ok: true,
             message: "edit order"
         });
     }
@@ -144,6 +149,7 @@ class OrderController {
     getOrderHistory = async function (req, res, next) {
         const data = await OrderService.getAllOrder({ ...req.query, userId: req.userId });
         res.send({
+            ok: true,
             message: "get history order",
             data
         });
@@ -153,6 +159,7 @@ class OrderController {
         const data = await OrderService.getOrderByCode(req.params.code, req.userId);
         if (!data) throw new BadRequestError('Mã đơn hàng không tồn tại');
         res.send({
+            ok: true,
             message: "get order status",
             data
         });
@@ -171,6 +178,7 @@ class OrderController {
         sendMail(user.email, "Cancel Order Token", `Mã xác thực để hủy đơn hàng ${req.params.code} của bạn là: ${token}`);
 
         res.send({
+            ok: true,
             message: "Kiểm tra email để nhận mã xác thực",
         });
     };
@@ -189,6 +197,7 @@ class OrderController {
         await ProductService.updateProductStock(order.items, true); //lủng củng chỗ này
 
         res.send({
+            ok: true,
             message: "Hủy đơn hàng thành công",
         });
     };
