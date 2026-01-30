@@ -6,6 +6,8 @@ var logger = require('./src/app/core/init_logger');
 const mongoose = require('mongoose');
 const { rateLimit } = require('express-rate-limit');
 const helmet = require('helmet');
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
 require('dotenv').config();
 require('./src/app/core/init_db');
 require('./src/app/core/init_redis');
@@ -18,9 +20,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.listen(5000, () => {
+  console.log("Server running at http://localhost:3000");
+  console.log("Swagger at http://localhost:5000/api-docs");
+});
+
 let blackList = []  //danh sách đen chứa các ip bị chặn
 app.use(cors({
-  origin: "*", // Thay đổi theo nguồn gốc của bạn
+  origin: "*", // host được phép truy cập. "*" nếu muốn cho tất cả các host truy cập
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }))
@@ -28,7 +37,10 @@ const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minutes
   limit: 60,
   handler: (req, res, next) => {
-    let host = req.headers['host'];
+    let host = req.headers['host']; //đưa vào blacklist
+    if (!blackList.includes(host)) {
+      blackList.push(host);
+    }
     console.log(host);
 
     return res.status(429).json({

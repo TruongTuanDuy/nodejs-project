@@ -25,8 +25,8 @@ class UserService {
         return data;
     }
 
-    getUserById = async (id) => {
-        let data = await UserModel.findById(id).populate("group_user");
+    getUserById = async ({id,  select = "" }) => {
+        let data = await UserModel.findById(id).populate("group_user").select(select);
         return data
     };
 

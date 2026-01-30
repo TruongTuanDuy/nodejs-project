@@ -8,7 +8,9 @@ class AuthController {
 
     register = async function (req, res, next) {
         const { email, password } = req.body;
-
+        if (!email || !password) {
+            throw new BadRequestError("Email và mật khẩu là bắt buộc");
+        }
         let user = await UserService.getUserByEmail(email);
         if (user) throw new BadRequestError("Email đã tồn tại");
 
@@ -40,7 +42,7 @@ class AuthController {
         res.send({
             ok: true,
             message: "login",
-            token
+            // token
         });
 
     };
@@ -79,7 +81,7 @@ class AuthController {
 
     changePassword = async function (req, res, next) {
         const { currentPassword, newPassword } = req.body;
-        const user = await UserService.getUserById(req.userId);
+        const user = await UserService.getUserById({ id: req.userId });
 
         const isMatch = await bcrypt.compare(currentPassword, user.password);
         if (!isMatch) throw new BadRequestError("Mật khẩu hiện tại không đúng");
@@ -96,7 +98,7 @@ class AuthController {
     };
 
     getMe = async function (req, res, next) {
-        const data = await UserService.getUserById(req.userId);
+        const data = await UserService.getUserById({ id: req.userId, select: "-password" });
         if (!data) throw new Error('không tìm thấy dữ liệu của bạn');
         res.send({
             ok: true,

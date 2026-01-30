@@ -13,7 +13,7 @@ function checkLogin(req, res, next) {
     // // verify a token symmetric - synchronous
     // let token = req.headers.authorization.split(' ')[1];
 
-    //CÁCH 2: NHẬN TOKEN TỪ COOKIE
+    //CÁCH 2: NHẬN TOKEN TỪ COOKIES
     let token = req.cookies.token;
 
     try {

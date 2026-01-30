@@ -29,6 +29,7 @@ io.on("connection", (socket) => {
   console.log("User connected : " + socket.id);
 
   socket.on("disconnect", () => {
+    git
     console.log("User disconnected : " + socket.id);
   });
 });

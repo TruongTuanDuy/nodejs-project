@@ -7,11 +7,28 @@ const { checkLogin } = require('../app/middlewares/check_login');
 const { checkPermission } = require('../app/middlewares/check_permission');
 
 /* GET home page. */
+
+/**
+ * @swagger
+ * /user:
+ *   get:
+ *     summary: Lấy danh sách user
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: Thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+*/
+
+router.use(checkLogin);
+router.use(checkPermission);
 router.get('/', asyncHandler(UserController.getAllUser));
 router.get('/:id', asyncHandler(UserController.getUserById));
-
-// router.use(checkLogin);
-// router.use(checkPermission);
 
 router.post('/', asyncHandler(UserController.addUser));
 router.delete('/:id', asyncHandler(UserController.deleteUserById));

@@ -1,6 +1,7 @@
 var { ErrorCustom, BadRequestError, AuthentificationError } = require('../app/core/error_custom');
 const { checkMogooseObjectId } = require('../app/helpers/check');
 let UserService = require('../services/user_service');
+let GroupUserService = require('../services/group_user_service');
 const cloudinary = require('../app/core/init_cloudinary');
 let { deleteImg, deleteMultiImg } = require('../app/helpers/deleteImg');
 
@@ -43,8 +44,19 @@ class UserController {
         let id = req.params.id;
         let obj = req.body;
 
-        const data = await UserService.getUserById(id);
+        const data = await UserService.getUserById({ id });
         if (!data) throw new Error('id không tìm thấy');
+
+        if ((obj.group_user)) {
+            const user = await UserService.getUserById({ id: req.userId });
+            if (!user) throw new Error('id không tìm thấy');
+            const groupUser = await GroupUserService.getItemById(user.group_user);
+            if (!groupUser)
+                throw new BadRequestError('group user không hợp lệ');
+            if (groupUser.name !== 'admin') {
+                throw new BadRequestError('Bạn không có quyền thay đổi group user');
+            }
+        }
 
         await UserService.editUserById(id, obj);
 
